@@ -1,2 +1,5 @@
-# rn-grpc-bridge
-React native grpc bridge
+rn-grpc-bridge
+=========================
+
+## Aim
+Generate React Native bridge files

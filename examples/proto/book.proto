@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package com.book;
+
+message Book {
+    int64 isbn = 1;
+    string title = 2;
+    string author = 3;
+}
+
+message GetBookRequest {
+    int64 isbn = 1;
+}
+
+message GetBookViaAuthor {
+    string author = 1;
+}
+
+service BookService {
+    rpc GetBook (GetBookRequest) returns (Book) {}
+    rpc GetBooksViaAuthor (GetBookViaAuthor) returns (stream Book) {}
+    rpc GetGreatestBook (stream GetBookRequest) returns (Book) {}
+    rpc GetBooks (stream GetBookRequest) returns (stream Book) {}
+}
+
+message BookStore {
+    string name = 1;
+    map<int64, string> books = 2;
+}
+
+enum EnumSample {
+    option allow_alias = true;
+    UNKNOWN = 0;
+    STARTED = 1;
+    RUNNING = 1;
+}
+
+// Message with reserved keywords
+// see: https://github.com/google/protobuf/blob/cc3fa2ec80d196e045ae05797799f079188106f3/js/compatibility_tests/v3.0.0/test.proto#L66-L72
+message SpecialCases {
+    string normal = 1;
+    // Examples of Js reserved names that are converted to pb_<name>.
+    string default = 2;
+    string function = 3;
+    string var = 4;
+}

@@ -1,0 +1,43 @@
+{
+  "name": "rn-grpc-bridge",
+  "version": "0.0.1",
+  "description": "Generate grpc Swift/Android bridge for React Native",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "rn-grpc-bridge": "bin/rn-grpc-bridge"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agreatfool/grpc_tools_node_protoc_ts.git"
+  },
+  "keywords": [
+    "React native",
+    "gRPC",
+    "protobuf",
+    "protoc",
+    "rn-grpc-bridge"
+  ],
+  "author": "Andzej Maciusovic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anjmao/rn-grpc-bridge/issues"
+  },
+  "homepage": "https://github.com/anjmao/rn-grpc-bridge#readme",
+  "dependencies": {
+    "google-protobuf": "^3.5.0",
+    "grpc": "^1.9.0",
+    "handlebars": "^4.0.11",
+    "handlebars-helpers": "^0.8.4"
+  },
+  "devDependencies": {
+    "@types/google-protobuf": "^3.2.7",
+    "@types/handlebars": "^4.0.36",
+    "@types/node": "^9.4.5",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.2"
+  }
+}
