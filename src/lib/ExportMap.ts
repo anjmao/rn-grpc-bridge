@@ -39,15 +39,15 @@ export class ExportMap {
             } : undefined,
         };
 
-        const entryName = `${scope ? scope + "." : ""}${message.getName()}`;
+        const entryName = `${scope ? scope + '.' : ''}${message.getName()}`;
         this.messageMap[entryName] = messageEntry;
 
         message.getNestedTypeList().forEach(nested => {
-            this.exportNested(scope + "." + message.getName(), fileDescriptor, nested);
+            this.exportNested(scope + '.' + message.getName(), fileDescriptor, nested);
         });
 
         message.getEnumTypeList().forEach(enumType => {
-            const identifier = scope + "." + message.getName() + "." + enumType.getName();
+            const identifier = scope + '.' + message.getName() + '.' + enumType.getName();
             this.enumMap[identifier] = {
                 pkg: fileDescriptor.getPackage(),
                 fileName: fileDescriptor.getName(),
@@ -63,7 +63,7 @@ export class ExportMap {
         });
 
         fileDescriptor.getEnumTypeList().forEach(enumType => {
-            this.enumMap[scope + "." + enumType.getName()] = {
+            this.enumMap[scope + '.' + enumType.getName()] = {
                 pkg: fileDescriptor.getPackage(),
                 fileName: fileDescriptor.getName(),
                 enumOptions: enumType.getOptions(),

@@ -1,26 +1,69 @@
 syntax = "proto3";
 
-package com.book;
+package book;
 
 message Book {
     int64 isbn = 1;
     string title = 2;
     string author = 3;
+    int32 pages = 4;
+    bool isActivate = 5;
 }
 
 message GetBookRequest {
     int64 isbn = 1;
 }
 
+message GetBooksResponse {
+    repeated Book items = 1;
+}
+
 message GetBookViaAuthor {
     string author = 1;
 }
 
+message GetTypesRequest {
+    double dbl = 1;
+    float flt = 2;
+    int32 intr32 = 3;
+    int64 intr64 = 4;
+    uint32 uintr32 = 5;
+    uint64 uintr64 = 6;
+    sint32 suint32 = 7;
+    sint64 suint64 = 8;
+    fixed32	fxd32 = 9;
+    fixed64	fxd64 = 10;
+    sfixed32 sfxd32 = 11;
+    sfixed64 sfxd64 = 12;
+    bool bln = 13;
+    string str = 14;
+    bytes bytx = 15;
+}
+
+message GetTypesResponse {
+    double dbl = 1;
+    float flt = 2;
+    int32 intr32 = 3;
+    int64 intr64 = 4;
+    uint32 uintr32 = 5;
+    uint64 uintr64 = 6;
+    sint32 suint32 = 7;
+    sint64 suint64 = 8;
+    fixed32	fxd32 = 9;
+    fixed64	fxd64 = 10;
+    sfixed32 sfxd32 = 11;
+    sfixed64 sfxd64 = 12;
+    bool bln = 13;
+    string str = 14;
+    bytes bytx = 15;
+}
+
 service BookService {
+    rpc GetTypes (GetTypesRequest) returns (GetTypesResponse) {}
     rpc GetBook (GetBookRequest) returns (Book) {}
     rpc GetBooksViaAuthor (GetBookViaAuthor) returns (stream Book) {}
     rpc GetGreatestBook (stream GetBookRequest) returns (Book) {}
-    rpc GetBooks (stream GetBookRequest) returns (stream Book) {}
+    rpc GetBooks (GetBookRequest) returns (GetBooksResponse) {}
 }
 
 message BookStore {

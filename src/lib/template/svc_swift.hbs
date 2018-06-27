@@ -1,0 +1,43 @@
+// package: {{{packageName}}}
+// file: {{{fileName}}}
+
+{{#each imports}}
+{{{this}}}
+{{/each}}
+
+{{#each services}}
+@objc({{{serviceName}}})
+class {{{serviceName}}}: NSObject {
+
+{{#each methods}}
+  @objc func {{{methodName}}}(_ req: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+      let svc = Tours_ToursServiceClient(address: "127.0.0.1:50051", secure: false)
+      var r = {{{requestTypeName}}}
+      {{#each requestFields}}
+      r.{{{name}}} = req["{{{name}}}"] {{{cast}}}
+      {{/each}}
+
+      do {
+        let rsp = try svc.getTours(r)
+        var arr = [Any]()
+        for item in rsp.items {
+          var tmp: [String: Any] = [:]
+          tmp["name"] = item.name
+          tmp["courseType"] = item.courseType
+          tmp["isActive"] = item.isActive
+          tmp["duration"] = item.duration
+          arr.append(tmp)
+        }
+        resolve(arr)
+      } catch {
+        reject("ERROR", error.localizedDescription, error)
+      }
+  }
+{{/each}}
+  
+  @objc
+  static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
+}
+{{/each}}

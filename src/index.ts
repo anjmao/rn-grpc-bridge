@@ -10,7 +10,7 @@ import { CodeGeneratorRequest, CodeGeneratorResponse } from 'google-protobuf/goo
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
 
 import * as ProtoMsgTsdFormatter from './lib/format/ProtoMsgTsdFormatter';
-import * as ProtoSvcTsdFormatter from './lib/format/ProtoSvcTsdFormatter';
+import * as ProtoSvcSwiftFormatter from './lib/format/ProtoSvcSwiftFormatter';
 
 Utility.withAllStdIn((inputBuff: Buffer) => {
 
@@ -38,11 +38,11 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
             codeGenResponse.addFile(msgTsdFile);
 
             // service part
-            let fileDescriptorOutput = ProtoSvcTsdFormatter.format(fileNameToDescriptor[fileName], exportMap);
+            let fileDescriptorOutput = ProtoSvcSwiftFormatter.format(fileNameToDescriptor[fileName], exportMap);
             if (fileDescriptorOutput !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
                 let svtTsdFile = new CodeGeneratorResponse.File();
-                svtTsdFile.setName(svcFileName + '.d.ts');
+                svtTsdFile.setName(svcFileName + '.swift');
                 svtTsdFile.setContent(fileDescriptorOutput);
                 codeGenResponse.addFile(svtTsdFile);
             }

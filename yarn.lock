@@ -432,6 +432,10 @@ google-protobuf@^3.5.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.6.0.tgz#e2bafb00c20a8734174d8f89e0a842709e2ceed0"
 
+grpc-plugins@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/grpc-plugins/-/grpc-plugins-0.0.4.tgz#34caf8b5b016e69430cc156b66750ff475fd0794"
+
 grpc@^1.9.0:
   version "1.12.4"
   resolved "https://registry.yarnpkg.com/grpc/-/grpc-1.12.4.tgz#85a3bc26dbf61fb8555d182aec42c1ab6b303ecd"
