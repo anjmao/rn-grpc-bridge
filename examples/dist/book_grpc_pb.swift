@@ -25,19 +25,38 @@ class BookService: NSObject {
       r.bln = req["bln"] as? Bool ?? false
       r.str = req["str"] as? String ?? ""
       r.bytx = req["bytx"] as? Data ?? Data()
+      r.books = [Book]()
+    for dict in req["books"] as? [[String: Any]] ?? [[String: Any]]() {
+        let item = Book();
+        item.isbn = dict["isbn"] as? Int64 ?? 0
+item.title = dict["title"] as? String ?? ""
+item.author = dict["author"] as? String ?? ""
+item.pages = dict["pages"] as? Int32 ?? 0
+item.isActivate = dict["isActivate"] as? Bool ?? false
+        r.books.append(item)
+    }
+    
+      r.book = Book_Book()
+r.Book.isbn = req["Book"]["isbn"] as? Int64 ?? 0
+r.Book.title = req["Book"]["title"] as? String ?? ""
+r.Book.author = req["Book"]["author"] as? String ?? ""
+r.Book.pages = req["Book"]["pages"] as? Int32 ?? 0
+r.Book.isActivate = req["Book"]["isActivate"] as? Bool ?? false
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }
@@ -49,16 +68,18 @@ class BookService: NSObject {
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }
@@ -70,16 +91,18 @@ class BookService: NSObject {
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }
@@ -91,16 +114,18 @@ class BookService: NSObject {
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }
@@ -112,16 +137,18 @@ class BookService: NSObject {
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }

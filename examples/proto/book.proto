@@ -38,6 +38,8 @@ message GetTypesRequest {
     bool bln = 13;
     string str = 14;
     bytes bytx = 15;
+    repeated Book books = 16;
+    Book book = 17;
 }
 
 message GetTypesResponse {

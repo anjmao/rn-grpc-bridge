@@ -155,6 +155,17 @@ export class GetTypesRequest extends jspb.Message {
     getBytx_asB64(): string;
     setBytx(value: Uint8Array | string): void;
 
+    clearBooksList(): void;
+    getBooksList(): Array<Book>;
+    setBooksList(value: Array<Book>): void;
+    addBooks(value?: Book, index?: number): Book;
+
+
+    hasBook(): boolean;
+    clearBook(): void;
+    getBook(): Book | undefined;
+    setBook(value?: Book): void;
+
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): GetTypesRequest.AsObject;
@@ -183,6 +194,8 @@ export namespace GetTypesRequest {
         bln: boolean,
         str: string,
         bytx: Uint8Array | string,
+        booksList: Array<Book.AsObject>,
+        book?: Book.AsObject,
     }
 }
 

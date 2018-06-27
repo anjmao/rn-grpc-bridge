@@ -14,21 +14,23 @@ class {{{serviceName}}}: NSObject {
       let svc = Tours_ToursServiceClient(address: "127.0.0.1:50051", secure: false)
       var r = {{{requestTypeName}}}
       {{#each requestFields}}
-      r.{{{name}}} = req["{{{name}}}"] {{{cast}}}
+      {{{value}}}
       {{/each}}
 
       do {
         let rsp = try svc.getTours(r)
-        var arr = [Any]()
+        var res: [String: Any] = [:]
+        var arr1 = [Any]()
         for item in rsp.items {
           var tmp: [String: Any] = [:]
           tmp["name"] = item.name
           tmp["courseType"] = item.courseType
           tmp["isActive"] = item.isActive
           tmp["duration"] = item.duration
-          arr.append(tmp)
+          arr1.append(tmp)
         }
-        resolve(arr)
+        res["items"] = arr1
+        resolve(res)
       } catch {
         reject("ERROR", error.localizedDescription, error)
       }
