@@ -6,7 +6,7 @@ type PartialMock<T> = {
 };
 
 describe('SwiftGen', () => {
-    fit('should generate', () => {
+    it('should generate', () => {
         const descriptor = {
             getName: () => 'books.proto',
             getPackage: () => 'books',

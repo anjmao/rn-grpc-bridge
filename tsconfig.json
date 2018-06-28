@@ -6,8 +6,8 @@
     "allowJs": true,
     "rootDir": "src",
     "outDir": "build",
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },

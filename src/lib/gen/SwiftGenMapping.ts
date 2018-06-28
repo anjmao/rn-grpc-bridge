@@ -51,10 +51,7 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
         };
 
         const genChildRepeatedAssign = (f) => {
-            const oldRoot = root;
             const oldRoot$ = root$
-            const newRoot = `${f.name}_${f.typeName}`;
-            const newRoot$ = `${f.name}_${f.typeName}$`;
             g(indent, `if let arr = ${oldRoot$}["${f.name}"] as? [[String: Any]] {`)
             g(indent + 1, `for item in arr {`)
             genChildAssign(indent + 2, f, true)
@@ -66,10 +63,10 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
         for (let f of message.fields) {
             switch (f.type) {
                 case t.TYPE_STRING:
-                    genAssign(f, (c) => `String(describing: ${c})`)
+                    genAssign(f, (c) => `${c} as? String ?? ""`)
                     break;
                 case t.TYPE_BOOL:
-                    // TODO
+                    genAssign(f, (c) => `${c} as? Bool ?? false`)
                     break;
                 case t.TYPE_INT32:
                 case t.TYPE_ENUM:
@@ -80,28 +77,24 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
                 case t.TYPE_INT64:
                 case t.TYPE_SFIXED64:
                 case t.TYPE_SINT64:
-                    // TODO
+                    genAssign(f, (c) => `Int64(${c} as? Int ?? 0)`)
                     break;
                 case t.TYPE_BYTES:
-                    // TODO
+                    genAssign(f, (c) => `${c} as? Data ?? Data()`)
                     break;
                 case t.TYPE_DOUBLE:
-                    // TODO
-                    break;
-                case t.TYPE_FIXED32:
-                    // TODO
-                    break;
-                case t.TYPE_FIXED64:
-                    // TODO
+                    genAssign(f, (c) => `${c} as? Double ?? 0`)
                     break;
                 case t.TYPE_FLOAT:
-                    // TODO
+                    genAssign(f, (c) => `${c} as? Float ?? 0`)
                     break;
                 case t.TYPE_UINT32:
-                    // TODO
+                case t.TYPE_FIXED32:
+                    genAssign(f, (c) => `UInt32(${c} as? Int ?? 0)`)
                     break;
                 case t.TYPE_UINT64:
-                    // TODO
+                case t.TYPE_FIXED64:
+                    genAssign(f, (c) => `UInt64(${c} as? Int ?? 0)`)
                     break;
                 case t.TYPE_MESSAGE:
                     if (f.repeated) {
@@ -120,7 +113,3 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
 
     return res;
 }
-
-// let res = []
-// gen(0, input, res, 'root', 'root$');
-// console.log(res.join('\n'))

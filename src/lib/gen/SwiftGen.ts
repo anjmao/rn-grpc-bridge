@@ -1,21 +1,7 @@
 import { FileDescriptorProto, DescriptorProto, FieldDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-import * as Utility from '../Utility';
 import * as TplEngine from '../TplEngine';
 import * as fs from 'fs';
 import { GenRequestMappingOptions, MappingProto, MappingProtoField, genRequestFields } from './SwiftGenMapping';
-
-interface RequestMappingField {
-    value: string;
-    name: string;
-    repeated: boolean;
-    childDescriptor: DescriptorProto;
-}
-
-interface ResponseMappingField {
-    value: string;
-    repeated: boolean;
-    childDescriptor: DescriptorProto;
-}
 
 export interface ServiceType {
     serviceName: string;
@@ -32,7 +18,7 @@ export interface ServiceMethodType {
     serviceName: string;
     methodName: string;
     requestMapping: string;
-    responseFields: ResponseMappingField[];
+    responseMapping: string;
     requestStream: boolean;
     responseStream: boolean;
     requestTypeName: string;
@@ -47,6 +33,7 @@ export const defaultServiceMethodType = JSON.stringify({
     requestStream: false,
     responseStream: false,
     requestMapping: '',
+    responseMapping: '',
     requestTypeName: '',
     responseTypeName: '',
     type: '',

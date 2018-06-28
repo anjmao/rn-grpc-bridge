@@ -1,10 +1,3 @@
-/**
- * This is the ProtoC compiler plugin.
- *
- * It only accepts stdin/stdout output according to the protocol
- * specified in [plugin.proto](https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/plugin.proto).
- */
-
 import * as Utility from './lib/Utility';
 import { CodeGeneratorRequest, CodeGeneratorResponse } from 'google-protobuf/google/protobuf/compiler/plugin_pb';
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
