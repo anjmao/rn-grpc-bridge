@@ -4,13 +4,12 @@
  * It only accepts stdin/stdout output according to the protocol
  * specified in [plugin.proto](https://github.com/google/protobuf/blob/master/src/google/protobuf/compiler/plugin.proto).
  */
-import { ExportMap } from './lib/ExportMap';
+
 import * as Utility from './lib/Utility';
 import { CodeGeneratorRequest, CodeGeneratorResponse } from 'google-protobuf/google/protobuf/compiler/plugin_pb';
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
 
-import * as ProtoMsgTsdFormatter from './lib/format/ProtoMsgTsdFormatter';
-import * as ProtoSvcSwiftFormatter from './lib/format/ProtoSvcSwiftFormatter';
+import * as SwiftGen from './lib/gen/SwiftGen';
 
 Utility.withAllStdIn((inputBuff: Buffer) => {
 
@@ -21,24 +20,15 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
 
         let codeGenRequest = CodeGeneratorRequest.deserializeBinary(typedInputBuff);
         let codeGenResponse = new CodeGeneratorResponse();
-        let exportMap = new ExportMap();
         let fileNameToDescriptor: { [key: string]: FileDescriptorProto } = {};
 
         codeGenRequest.getProtoFileList().forEach(protoFileDescriptor => {
             fileNameToDescriptor[protoFileDescriptor.getName()] = protoFileDescriptor;
-            exportMap.addFileDescriptor(protoFileDescriptor);
         });
 
         codeGenRequest.getFileToGenerateList().forEach(fileName => {
-            // message part
-            let msgFileName = Utility.filePathFromProtoWithoutExt(fileName);
-            let msgTsdFile = new CodeGeneratorResponse.File();
-            msgTsdFile.setName(msgFileName + '.d.ts');
-            msgTsdFile.setContent(ProtoMsgTsdFormatter.format(fileNameToDescriptor[fileName], exportMap));
-            codeGenResponse.addFile(msgTsdFile);
-
             // service part
-            let fileDescriptorOutput = ProtoSvcSwiftFormatter.format(fileNameToDescriptor[fileName], exportMap);
+            let fileDescriptorOutput = SwiftGen.gen(fileNameToDescriptor[fileName]);
             if (fileDescriptorOutput !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
                 let svtTsdFile = new CodeGeneratorResponse.File();

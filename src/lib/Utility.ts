@@ -1,5 +1,4 @@
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-import { ExportEnumEntry, ExportMessageEntry } from './ExportMap';
 
 const PROTO2_SYNTAX = 'proto2';
 
@@ -29,7 +28,7 @@ export function oneOfName(name: string) {
 export function generateIndent(indentLevel: number): string {
     let indent = '';
     for (let i = 0; i < indentLevel; i++) {
-        indent += '    '
+        indent += '  '
     }
     return indent;
 }
@@ -37,10 +36,6 @@ export function generateIndent(indentLevel: number): string {
 export function getPathToRoot(fileName: string) {
     const depth = fileName.split('/').length;
     return depth === 1 ? './' : new Array(depth).join('../');
-}
-
-export function withinNamespaceFromExportEntry(name: string, exportEntry: ExportMessageEntry | ExportEnumEntry) {
-    return exportEntry.pkg ? name.substring(exportEntry.pkg.length + 1) : name;
 }
 
 export function filePathFromProtoWithoutExt(protoFilePath: string): string {

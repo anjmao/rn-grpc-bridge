@@ -11,29 +11,22 @@ class {{{serviceName}}}: NSObject {
 
 {{#each methods}}
   @objc func {{{methodName}}}(_ req: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-      let svc = Tours_ToursServiceClient(address: "127.0.0.1:50051", secure: false)
-      var r = {{{requestTypeName}}}
-      {{#each requestFields}}
+    let svc = Tours_ToursServiceClient(address: "127.0.0.1:50051", secure: false)
+    var r = {{{requestTypeName}}}
+    {{#each requestFields}}
+    {{{value}}}
+    {{/each}}
+
+    do {
+      let rsp = try svc.{{{methodName}}}(r)
+      var res: [String: Any] = [:]
+      {{#each responseFields}}
       {{{value}}}
       {{/each}}
-
-      do {
-        let rsp = try svc.getTours(r)
-        var res: [String: Any] = [:]
-        var arr1 = [Any]()
-        for item in rsp.items {
-          var tmp: [String: Any] = [:]
-          tmp["name"] = item.name
-          tmp["courseType"] = item.courseType
-          tmp["isActive"] = item.isActive
-          tmp["duration"] = item.duration
-          arr1.append(tmp)
-        }
-        res["items"] = arr1
-        resolve(res)
-      } catch {
-        reject("ERROR", error.localizedDescription, error)
-      }
+      resolve(res)
+    } catch {
+      reject("ERROR", error.localizedDescription, error)
+    }
   }
 {{/each}}
   

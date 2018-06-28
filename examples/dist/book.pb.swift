@@ -53,15 +53,53 @@ struct Book_Book {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var isbn: Int64 = 0
+  var isbn: Int64 {
+    get {return _storage._isbn}
+    set {_uniqueStorage()._isbn = newValue}
+  }
 
-  var title: String = String()
+  var title: String {
+    get {return _storage._title}
+    set {_uniqueStorage()._title = newValue}
+  }
 
-  var author: String = String()
+  var author: String {
+    get {return _storage._author}
+    set {_uniqueStorage()._author = newValue}
+  }
+
+  var pages: Int32 {
+    get {return _storage._pages}
+    set {_uniqueStorage()._pages = newValue}
+  }
+
+  var isActivate: Bool {
+    get {return _storage._isActivate}
+    set {_uniqueStorage()._isActivate = newValue}
+  }
+
+  var details: Book_BookDetails {
+    get {return _storage._details ?? Book_BookDetails()}
+    set {_uniqueStorage()._details = newValue}
+  }
+  /// Returns true if `details` has been explicitly set.
+  var hasDetails: Bool {return _storage._details != nil}
+  /// Clears the value of `details`. Subsequent reads from it will return its default value.
+  mutating func clearDetails() {_storage._details = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
+}
+
+struct Book_BookDetails {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
 
   var pages: Int32 = 0
-
-  var isActivate: Bool = false
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -210,39 +248,100 @@ struct Book_GetTypesResponse {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  var dbl: Double = 0
+  var dbl: Double {
+    get {return _storage._dbl}
+    set {_uniqueStorage()._dbl = newValue}
+  }
 
-  var flt: Float = 0
+  var flt: Float {
+    get {return _storage._flt}
+    set {_uniqueStorage()._flt = newValue}
+  }
 
-  var intr32: Int32 = 0
+  var intr32: Int32 {
+    get {return _storage._intr32}
+    set {_uniqueStorage()._intr32 = newValue}
+  }
 
-  var intr64: Int64 = 0
+  var intr64: Int64 {
+    get {return _storage._intr64}
+    set {_uniqueStorage()._intr64 = newValue}
+  }
 
-  var uintr32: UInt32 = 0
+  var uintr32: UInt32 {
+    get {return _storage._uintr32}
+    set {_uniqueStorage()._uintr32 = newValue}
+  }
 
-  var uintr64: UInt64 = 0
+  var uintr64: UInt64 {
+    get {return _storage._uintr64}
+    set {_uniqueStorage()._uintr64 = newValue}
+  }
 
-  var suint32: Int32 = 0
+  var suint32: Int32 {
+    get {return _storage._suint32}
+    set {_uniqueStorage()._suint32 = newValue}
+  }
 
-  var suint64: Int64 = 0
+  var suint64: Int64 {
+    get {return _storage._suint64}
+    set {_uniqueStorage()._suint64 = newValue}
+  }
 
-  var fxd32: UInt32 = 0
+  var fxd32: UInt32 {
+    get {return _storage._fxd32}
+    set {_uniqueStorage()._fxd32 = newValue}
+  }
 
-  var fxd64: UInt64 = 0
+  var fxd64: UInt64 {
+    get {return _storage._fxd64}
+    set {_uniqueStorage()._fxd64 = newValue}
+  }
 
-  var sfxd32: Int32 = 0
+  var sfxd32: Int32 {
+    get {return _storage._sfxd32}
+    set {_uniqueStorage()._sfxd32 = newValue}
+  }
 
-  var sfxd64: Int64 = 0
+  var sfxd64: Int64 {
+    get {return _storage._sfxd64}
+    set {_uniqueStorage()._sfxd64 = newValue}
+  }
 
-  var bln: Bool = false
+  var bln: Bool {
+    get {return _storage._bln}
+    set {_uniqueStorage()._bln = newValue}
+  }
 
-  var str: String = String()
+  var str: String {
+    get {return _storage._str}
+    set {_uniqueStorage()._str = newValue}
+  }
 
-  var bytx: Data = SwiftProtobuf.Internal.emptyData
+  var bytx: Data {
+    get {return _storage._bytx}
+    set {_uniqueStorage()._bytx = newValue}
+  }
+
+  var books: [Book_Book] {
+    get {return _storage._books}
+    set {_uniqueStorage()._books = newValue}
+  }
+
+  var book: Book_Book {
+    get {return _storage._book ?? Book_Book()}
+    set {_uniqueStorage()._book = newValue}
+  }
+  /// Returns true if `book` has been explicitly set.
+  var hasBook: Bool {return _storage._book != nil}
+  /// Clears the value of `book`. Subsequent reads from it will return its default value.
+  mutating func clearBook() {_storage._book = nil}
 
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
+
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 struct Book_BookStore {
@@ -299,46 +398,123 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     3: .same(proto: "author"),
     4: .same(proto: "pages"),
     5: .same(proto: "isActivate"),
+    6: .same(proto: "details"),
+  ]
+
+  fileprivate class _StorageClass {
+    var _isbn: Int64 = 0
+    var _title: String = String()
+    var _author: String = String()
+    var _pages: Int32 = 0
+    var _isActivate: Bool = false
+    var _details: Book_BookDetails? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _isbn = source._isbn
+      _title = source._title
+      _author = source._author
+      _pages = source._pages
+      _isActivate = source._isActivate
+      _details = source._details
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularInt64Field(value: &_storage._isbn)
+        case 2: try decoder.decodeSingularStringField(value: &_storage._title)
+        case 3: try decoder.decodeSingularStringField(value: &_storage._author)
+        case 4: try decoder.decodeSingularInt32Field(value: &_storage._pages)
+        case 5: try decoder.decodeSingularBoolField(value: &_storage._isActivate)
+        case 6: try decoder.decodeSingularMessageField(value: &_storage._details)
+        default: break
+        }
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if _storage._isbn != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._isbn, fieldNumber: 1)
+      }
+      if !_storage._title.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._title, fieldNumber: 2)
+      }
+      if !_storage._author.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._author, fieldNumber: 3)
+      }
+      if _storage._pages != 0 {
+        try visitor.visitSingularInt32Field(value: _storage._pages, fieldNumber: 4)
+      }
+      if _storage._isActivate != false {
+        try visitor.visitSingularBoolField(value: _storage._isActivate, fieldNumber: 5)
+      }
+      if let v = _storage._details {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      }
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  func _protobuf_generated_isEqualTo(other: Book_Book) -> Bool {
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let other_storage = _args.1
+        if _storage._isbn != other_storage._isbn {return false}
+        if _storage._title != other_storage._title {return false}
+        if _storage._author != other_storage._author {return false}
+        if _storage._pages != other_storage._pages {return false}
+        if _storage._isActivate != other_storage._isActivate {return false}
+        if _storage._details != other_storage._details {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
+    if unknownFields != other.unknownFields {return false}
+    return true
+  }
+}
+
+extension Book_BookDetails: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = _protobuf_package + ".BookDetails"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "pages"),
   ]
 
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularInt64Field(value: &self.isbn)
-      case 2: try decoder.decodeSingularStringField(value: &self.title)
-      case 3: try decoder.decodeSingularStringField(value: &self.author)
-      case 4: try decoder.decodeSingularInt32Field(value: &self.pages)
-      case 5: try decoder.decodeSingularBoolField(value: &self.isActivate)
+      case 1: try decoder.decodeSingularInt32Field(value: &self.pages)
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.isbn != 0 {
-      try visitor.visitSingularInt64Field(value: self.isbn, fieldNumber: 1)
-    }
-    if !self.title.isEmpty {
-      try visitor.visitSingularStringField(value: self.title, fieldNumber: 2)
-    }
-    if !self.author.isEmpty {
-      try visitor.visitSingularStringField(value: self.author, fieldNumber: 3)
-    }
     if self.pages != 0 {
-      try visitor.visitSingularInt32Field(value: self.pages, fieldNumber: 4)
-    }
-    if self.isActivate != false {
-      try visitor.visitSingularBoolField(value: self.isActivate, fieldNumber: 5)
+      try visitor.visitSingularInt32Field(value: self.pages, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  func _protobuf_generated_isEqualTo(other: Book_Book) -> Bool {
-    if self.isbn != other.isbn {return false}
-    if self.title != other.title {return false}
-    if self.author != other.author {return false}
+  func _protobuf_generated_isEqualTo(other: Book_BookDetails) -> Bool {
     if self.pages != other.pages {return false}
-    if self.isActivate != other.isActivate {return false}
     if unknownFields != other.unknownFields {return false}
     return true
   }
@@ -638,96 +814,172 @@ extension Book_GetTypesResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     13: .same(proto: "bln"),
     14: .same(proto: "str"),
     15: .same(proto: "bytx"),
+    16: .same(proto: "books"),
+    17: .same(proto: "book"),
   ]
 
+  fileprivate class _StorageClass {
+    var _dbl: Double = 0
+    var _flt: Float = 0
+    var _intr32: Int32 = 0
+    var _intr64: Int64 = 0
+    var _uintr32: UInt32 = 0
+    var _uintr64: UInt64 = 0
+    var _suint32: Int32 = 0
+    var _suint64: Int64 = 0
+    var _fxd32: UInt32 = 0
+    var _fxd64: UInt64 = 0
+    var _sfxd32: Int32 = 0
+    var _sfxd64: Int64 = 0
+    var _bln: Bool = false
+    var _str: String = String()
+    var _bytx: Data = SwiftProtobuf.Internal.emptyData
+    var _books: [Book_Book] = []
+    var _book: Book_Book? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _dbl = source._dbl
+      _flt = source._flt
+      _intr32 = source._intr32
+      _intr64 = source._intr64
+      _uintr32 = source._uintr32
+      _uintr64 = source._uintr64
+      _suint32 = source._suint32
+      _suint64 = source._suint64
+      _fxd32 = source._fxd32
+      _fxd64 = source._fxd64
+      _sfxd32 = source._sfxd32
+      _sfxd64 = source._sfxd64
+      _bln = source._bln
+      _str = source._str
+      _bytx = source._bytx
+      _books = source._books
+      _book = source._book
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1: try decoder.decodeSingularDoubleField(value: &self.dbl)
-      case 2: try decoder.decodeSingularFloatField(value: &self.flt)
-      case 3: try decoder.decodeSingularInt32Field(value: &self.intr32)
-      case 4: try decoder.decodeSingularInt64Field(value: &self.intr64)
-      case 5: try decoder.decodeSingularUInt32Field(value: &self.uintr32)
-      case 6: try decoder.decodeSingularUInt64Field(value: &self.uintr64)
-      case 7: try decoder.decodeSingularSInt32Field(value: &self.suint32)
-      case 8: try decoder.decodeSingularSInt64Field(value: &self.suint64)
-      case 9: try decoder.decodeSingularFixed32Field(value: &self.fxd32)
-      case 10: try decoder.decodeSingularFixed64Field(value: &self.fxd64)
-      case 11: try decoder.decodeSingularSFixed32Field(value: &self.sfxd32)
-      case 12: try decoder.decodeSingularSFixed64Field(value: &self.sfxd64)
-      case 13: try decoder.decodeSingularBoolField(value: &self.bln)
-      case 14: try decoder.decodeSingularStringField(value: &self.str)
-      case 15: try decoder.decodeSingularBytesField(value: &self.bytx)
-      default: break
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        switch fieldNumber {
+        case 1: try decoder.decodeSingularDoubleField(value: &_storage._dbl)
+        case 2: try decoder.decodeSingularFloatField(value: &_storage._flt)
+        case 3: try decoder.decodeSingularInt32Field(value: &_storage._intr32)
+        case 4: try decoder.decodeSingularInt64Field(value: &_storage._intr64)
+        case 5: try decoder.decodeSingularUInt32Field(value: &_storage._uintr32)
+        case 6: try decoder.decodeSingularUInt64Field(value: &_storage._uintr64)
+        case 7: try decoder.decodeSingularSInt32Field(value: &_storage._suint32)
+        case 8: try decoder.decodeSingularSInt64Field(value: &_storage._suint64)
+        case 9: try decoder.decodeSingularFixed32Field(value: &_storage._fxd32)
+        case 10: try decoder.decodeSingularFixed64Field(value: &_storage._fxd64)
+        case 11: try decoder.decodeSingularSFixed32Field(value: &_storage._sfxd32)
+        case 12: try decoder.decodeSingularSFixed64Field(value: &_storage._sfxd64)
+        case 13: try decoder.decodeSingularBoolField(value: &_storage._bln)
+        case 14: try decoder.decodeSingularStringField(value: &_storage._str)
+        case 15: try decoder.decodeSingularBytesField(value: &_storage._bytx)
+        case 16: try decoder.decodeRepeatedMessageField(value: &_storage._books)
+        case 17: try decoder.decodeSingularMessageField(value: &_storage._book)
+        default: break
+        }
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.dbl != 0 {
-      try visitor.visitSingularDoubleField(value: self.dbl, fieldNumber: 1)
-    }
-    if self.flt != 0 {
-      try visitor.visitSingularFloatField(value: self.flt, fieldNumber: 2)
-    }
-    if self.intr32 != 0 {
-      try visitor.visitSingularInt32Field(value: self.intr32, fieldNumber: 3)
-    }
-    if self.intr64 != 0 {
-      try visitor.visitSingularInt64Field(value: self.intr64, fieldNumber: 4)
-    }
-    if self.uintr32 != 0 {
-      try visitor.visitSingularUInt32Field(value: self.uintr32, fieldNumber: 5)
-    }
-    if self.uintr64 != 0 {
-      try visitor.visitSingularUInt64Field(value: self.uintr64, fieldNumber: 6)
-    }
-    if self.suint32 != 0 {
-      try visitor.visitSingularSInt32Field(value: self.suint32, fieldNumber: 7)
-    }
-    if self.suint64 != 0 {
-      try visitor.visitSingularSInt64Field(value: self.suint64, fieldNumber: 8)
-    }
-    if self.fxd32 != 0 {
-      try visitor.visitSingularFixed32Field(value: self.fxd32, fieldNumber: 9)
-    }
-    if self.fxd64 != 0 {
-      try visitor.visitSingularFixed64Field(value: self.fxd64, fieldNumber: 10)
-    }
-    if self.sfxd32 != 0 {
-      try visitor.visitSingularSFixed32Field(value: self.sfxd32, fieldNumber: 11)
-    }
-    if self.sfxd64 != 0 {
-      try visitor.visitSingularSFixed64Field(value: self.sfxd64, fieldNumber: 12)
-    }
-    if self.bln != false {
-      try visitor.visitSingularBoolField(value: self.bln, fieldNumber: 13)
-    }
-    if !self.str.isEmpty {
-      try visitor.visitSingularStringField(value: self.str, fieldNumber: 14)
-    }
-    if !self.bytx.isEmpty {
-      try visitor.visitSingularBytesField(value: self.bytx, fieldNumber: 15)
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if _storage._dbl != 0 {
+        try visitor.visitSingularDoubleField(value: _storage._dbl, fieldNumber: 1)
+      }
+      if _storage._flt != 0 {
+        try visitor.visitSingularFloatField(value: _storage._flt, fieldNumber: 2)
+      }
+      if _storage._intr32 != 0 {
+        try visitor.visitSingularInt32Field(value: _storage._intr32, fieldNumber: 3)
+      }
+      if _storage._intr64 != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._intr64, fieldNumber: 4)
+      }
+      if _storage._uintr32 != 0 {
+        try visitor.visitSingularUInt32Field(value: _storage._uintr32, fieldNumber: 5)
+      }
+      if _storage._uintr64 != 0 {
+        try visitor.visitSingularUInt64Field(value: _storage._uintr64, fieldNumber: 6)
+      }
+      if _storage._suint32 != 0 {
+        try visitor.visitSingularSInt32Field(value: _storage._suint32, fieldNumber: 7)
+      }
+      if _storage._suint64 != 0 {
+        try visitor.visitSingularSInt64Field(value: _storage._suint64, fieldNumber: 8)
+      }
+      if _storage._fxd32 != 0 {
+        try visitor.visitSingularFixed32Field(value: _storage._fxd32, fieldNumber: 9)
+      }
+      if _storage._fxd64 != 0 {
+        try visitor.visitSingularFixed64Field(value: _storage._fxd64, fieldNumber: 10)
+      }
+      if _storage._sfxd32 != 0 {
+        try visitor.visitSingularSFixed32Field(value: _storage._sfxd32, fieldNumber: 11)
+      }
+      if _storage._sfxd64 != 0 {
+        try visitor.visitSingularSFixed64Field(value: _storage._sfxd64, fieldNumber: 12)
+      }
+      if _storage._bln != false {
+        try visitor.visitSingularBoolField(value: _storage._bln, fieldNumber: 13)
+      }
+      if !_storage._str.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._str, fieldNumber: 14)
+      }
+      if !_storage._bytx.isEmpty {
+        try visitor.visitSingularBytesField(value: _storage._bytx, fieldNumber: 15)
+      }
+      if !_storage._books.isEmpty {
+        try visitor.visitRepeatedMessageField(value: _storage._books, fieldNumber: 16)
+      }
+      if let v = _storage._book {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   func _protobuf_generated_isEqualTo(other: Book_GetTypesResponse) -> Bool {
-    if self.dbl != other.dbl {return false}
-    if self.flt != other.flt {return false}
-    if self.intr32 != other.intr32 {return false}
-    if self.intr64 != other.intr64 {return false}
-    if self.uintr32 != other.uintr32 {return false}
-    if self.uintr64 != other.uintr64 {return false}
-    if self.suint32 != other.suint32 {return false}
-    if self.suint64 != other.suint64 {return false}
-    if self.fxd32 != other.fxd32 {return false}
-    if self.fxd64 != other.fxd64 {return false}
-    if self.sfxd32 != other.sfxd32 {return false}
-    if self.sfxd64 != other.sfxd64 {return false}
-    if self.bln != other.bln {return false}
-    if self.str != other.str {return false}
-    if self.bytx != other.bytx {return false}
+    if _storage !== other._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((_storage, other._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let other_storage = _args.1
+        if _storage._dbl != other_storage._dbl {return false}
+        if _storage._flt != other_storage._flt {return false}
+        if _storage._intr32 != other_storage._intr32 {return false}
+        if _storage._intr64 != other_storage._intr64 {return false}
+        if _storage._uintr32 != other_storage._uintr32 {return false}
+        if _storage._uintr64 != other_storage._uintr64 {return false}
+        if _storage._suint32 != other_storage._suint32 {return false}
+        if _storage._suint64 != other_storage._suint64 {return false}
+        if _storage._fxd32 != other_storage._fxd32 {return false}
+        if _storage._fxd64 != other_storage._fxd64 {return false}
+        if _storage._sfxd32 != other_storage._sfxd32 {return false}
+        if _storage._sfxd64 != other_storage._sfxd64 {return false}
+        if _storage._bln != other_storage._bln {return false}
+        if _storage._str != other_storage._str {return false}
+        if _storage._bytx != other_storage._bytx {return false}
+        if _storage._books != other_storage._books {return false}
+        if _storage._book != other_storage._book {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if unknownFields != other.unknownFields {return false}
     return true
   }
