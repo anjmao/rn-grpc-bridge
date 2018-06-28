@@ -21,9 +21,9 @@ protoc \
 -I ./proto \
 proto/*.proto
 
-protoc \
---swift_out=${PROTO_DEST} \
---plugin=protoc-gen-swiftgrpc=../node_modules/grpc-plugins/osx/protoc-gen-swiftgrpc \
---swiftgrpc_out=${PROTO_DEST} \
--I ./proto \
-./proto/*.proto
+# protoc \
+# --swift_out=${PROTO_DEST} \
+# --plugin=protoc-gen-swiftgrpc=../node_modules/grpc-plugins/osx/protoc-gen-swiftgrpc \
+# --swiftgrpc_out=${PROTO_DEST} \
+# -I ./proto \
+# ./proto/*.proto

@@ -2,7 +2,7 @@ import { FileDescriptorProto, DescriptorProto, FieldDescriptorProto } from 'goog
 import * as Utility from '../Utility';
 import * as TplEngine from '../TplEngine';
 import * as fs from 'fs';
-import { genRequestMapping, GenRequestMappingOptions, MappingProto, MappingProtoField } from './SwiftGenMapping';
+import { GenRequestMappingOptions, MappingProto, MappingProtoField, genRequestFields } from './SwiftGenMapping';
 
 interface RequestMappingField {
     value: string;
@@ -31,7 +31,7 @@ export interface ServiceMethodType {
     packageName: string;
     serviceName: string;
     methodName: string;
-    requestFields: RequestMappingField[];
+    requestMapping: string;
     responseFields: ResponseMappingField[];
     requestStream: boolean;
     responseStream: boolean;
@@ -46,7 +46,7 @@ export const defaultServiceMethodType = JSON.stringify({
     methodName: '',
     requestStream: false,
     responseStream: false,
-    requestFields: [],
+    requestMapping: '',
     requestTypeName: '',
     responseTypeName: '',
     type: '',
@@ -65,7 +65,7 @@ export function gen(descriptor: FileDescriptorProto): string {
         return '';
     }
 
-    // clearLog();
+    clearLog();
     // logJSON('');
 
     let fileName = descriptor.getName();
@@ -97,7 +97,8 @@ export function gen(descriptor: FileDescriptorProto): string {
             methodData.responseStream = method.getServerStreaming();
             methodData.requestTypeName = `${packageName}_${inputType.getName()}()`;
             methodData.responseTypeName = `${packageName}_${outputType.getName()}()`;
-            methodData.requestFields = formatRequestFields(packageName, messageTypes, inputType);
+            methodData.requestMapping = formatRequest(packageName, [], inputType);
+
             // methodData.responseFields = formatResponseFields(packageName, messageTypes, outputType);
 
             if (!methodData.requestStream && !methodData.responseStream) {
@@ -131,7 +132,8 @@ export function gen(descriptor: FileDescriptorProto): string {
 function getType(messageTypes: DescriptorProto[], type: string) {
     return messageTypes.find(x => {
         const inputName = type.split('.').pop();
-        return x.getName() === inputName;
+        const name = x.getName();
+        return name === inputName;
     });
 }
 
@@ -140,24 +142,30 @@ function getPackageName(pkg: string) {
     return pkg[0].toUpperCase() + pkg.slice(1);
 }
 
-function formatRequestFields(packageName: string, messageTypes: DescriptorProto[], inputType: DescriptorProto) {
+function formatRequest(packageName: string, messageTypes: DescriptorProto[], inputType: DescriptorProto) {
+
     const mapProto = (input: DescriptorProto) => {
         return <MappingProto>{
             name: input.getName(),
             fields: input.getFieldList().map(f => (<MappingProtoField>{ 
                 name: f.getName(),
+                typeName: f.getTypeName().split('.').pop(),
                 type: f.getType(),
                 repeated: f.getLabel() === FieldDescriptorProto.Label.LABEL_REPEATED
             }))
         }
     };
-    const req: GenRequestMappingOptions = {
+
+    logJSON(mapProto(inputType))
+
+    const req: GenRequestMappingOptions = <any>{
         packageName: packageName,
         indent: 0,
-        messages: messageTypes.map(mapProto),
+        messages: messageTypes.map(x => mapProto(x)),
         message: mapProto(inputType),
         root: 'root',
         root$: 'root$'
     }
-    const fields = genRequestMapping(req)
+    const fields = genRequestFields(req);
+    return fields.join('\n');
 }

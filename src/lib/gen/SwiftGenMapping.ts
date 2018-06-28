@@ -22,9 +22,12 @@ export interface GenRequestMappingOptions {
     root$: string;
 }
 
-export function genRequestMapping(opt: GenRequestMappingOptions): string[] {
+export function genRequestFields(opt: GenRequestMappingOptions): string[] {
     const res: string[] = [];
     const gen = (indent: number, message: MappingProto, root: string, root$: string) => {
+        if (!message) {
+            return;
+        }
         const g = (i, val) => res.push(generateIndent(i) + val);
         const genAssign = (f, cast) => {
             g(indent, `${root}.${f.name} = ${cast(`${root$}["${f.name}"]`)}`)
@@ -108,7 +111,7 @@ export function genRequestMapping(opt: GenRequestMappingOptions): string[] {
                     }
                     break;
                 default:
-                    throw new Error(`Data type ${f.typeName} is not supported.`);
+                    throw new Error(`Data type ${f.type} is not supported.`);
             };
         }
     };
