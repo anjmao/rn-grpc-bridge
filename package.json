@@ -11,6 +11,12 @@
   "bin": {
     "rn-grpc-bridge": "bin/rn-grpc-bridge"
   },
+  "files": [
+    "README.md",
+    "build/",
+    "bin/",
+    "package.json"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/agreatfool/grpc_tools_node_protoc_ts.git"
