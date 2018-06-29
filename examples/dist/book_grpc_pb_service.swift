@@ -4,31 +4,31 @@
 import Foundation
 import SwiftGRPC
 
-@objc(BookService)
-class BookService: NSObject, GrpcService {
+@objc(BooksService)
+class BooksService: GrpcService {
 
 
-  @objc func GetTypes(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = BookServiceClient()
+  @objc func getTypes(_ jsReq: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BooksGrpcClient
     var req = Book_GetTypesRequest()
 
     // request mapping
-    req.dbl = req$["dbl"] as? Double ?? 0
-    req.flt = req$["flt"] as? Float ?? 0
-    req.intr32 = Int32(req$["intr32"] as? Int ?? 0)
-    req.intr64 = Int64(req$["intr64"] as? Int ?? 0)
-    req.uintr32 = UInt32(req$["uintr32"] as? Int ?? 0)
-    req.uintr64 = UInt64(req$["uintr64"] as? Int ?? 0)
-    req.suint32 = Int32(req$["suint32"] as? Int ?? 0)
-    req.suint64 = Int64(req$["suint64"] as? Int ?? 0)
-    req.fxd32 = UInt32(req$["fxd32"] as? Int ?? 0)
-    req.fxd64 = UInt64(req$["fxd64"] as? Int ?? 0)
-    req.sfxd32 = Int32(req$["sfxd32"] as? Int ?? 0)
-    req.sfxd64 = Int64(req$["sfxd64"] as? Int ?? 0)
-    req.bln = req$["bln"] as? Bool ?? false
-    req.str = req$["str"] as? String ?? ""
-    req.bytx = req$["bytx"] as? Data ?? Data()
-    if let arr = req$["books"] as? [[String: Any]] {
+    req.dbl = jsReq["dbl"] as? Double ?? 0
+    req.flt = jsReq["flt"] as? Float ?? 0
+    req.intr32 = Int32(jsReq["intr32"] as? Int ?? 0)
+    req.intr64 = Int64(jsReq["intr64"] as? Int ?? 0)
+    req.uintr32 = UInt32(jsReq["uintr32"] as? Int ?? 0)
+    req.uintr64 = UInt64(jsReq["uintr64"] as? Int ?? 0)
+    req.suint32 = Int32(jsReq["suint32"] as? Int ?? 0)
+    req.suint64 = Int64(jsReq["suint64"] as? Int ?? 0)
+    req.fxd32 = UInt32(jsReq["fxd32"] as? Int ?? 0)
+    req.fxd64 = UInt64(jsReq["fxd64"] as? Int ?? 0)
+    req.sfxd32 = Int32(jsReq["sfxd32"] as? Int ?? 0)
+    req.sfxd64 = Int64(jsReq["sfxd64"] as? Int ?? 0)
+    req.bln = jsReq["bln"] as? Bool ?? false
+    req.str = jsReq["str"] as? String ?? ""
+    req.bytx = jsReq["bytx"] as? Data ?? Data()
+    if let arr = jsReq["books"] as? [[String: Any]] {
       for item in arr {
         if let books_Book$ = item as? [String: Any] {
           var books_Book = Book()
@@ -42,6 +42,7 @@ class BookService: NSObject, GrpcService {
             details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
             books_Book.details = details_BookDetails
           }
+          books_Book.id = Int32(books_Book$["details"]["id"] as? Int ?? 0)
           req.books.append(books_Book)
         }
       }
@@ -58,153 +59,199 @@ class BookService: NSObject, GrpcService {
         details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
         book_Book.details = details_BookDetails
       }
+      book_Book.id = Int32(book_Book$["details"]["id"] as? Int ?? 0)
       req.book = book_Book
     }
     // end request mapping
 
     do {
-      let res = try svc.GetTypes(req)
-      var res$: [String: Any] = [:]
+      let res = try svc.getTypes(req)
+      var jsRes: [String: Any] = [:]
 
       // response mapping
-      res$["dbl"] = res.dbl
-      res$["flt"] = res.flt
-      res$["intr32"] = res.intr32
-      res$["intr64"] = res.intr64
-      res$["uintr32"] = res.uintr32
-      res$["uintr64"] = res.uintr64
-      res$["suint32"] = res.suint32
-      res$["suint64"] = res.suint64
-      res$["fxd32"] = res.fxd32
-      res$["fxd64"] = res.fxd64
-      res$["sfxd32"] = res.sfxd32
-      res$["sfxd64"] = res.sfxd64
-      res$["bln"] = res.bln
-      res$["str"] = res.str
-      res$["bytx"] = res.bytx
+      jsRes["dbl"] = res.dbl
+      jsRes["flt"] = res.flt
+      jsRes["intr32"] = res.intr32
+      jsRes["intr64"] = res.intr64
+      jsRes["uintr32"] = res.uintr32
+      jsRes["uintr64"] = res.uintr64
+      jsRes["suint32"] = res.suint32
+      jsRes["suint64"] = res.suint64
+      jsRes["fxd32"] = res.fxd32
+      jsRes["fxd64"] = res.fxd64
+      jsRes["sfxd32"] = res.sfxd32
+      jsRes["sfxd64"] = res.sfxd64
+      jsRes["bln"] = res.bln
+      jsRes["str"] = res.str
+      jsRes["bytx"] = res.bytx
       var books$: [[String: Any]] = []
       for item in res.books {
-        var _books_Book = item
+        let _books_Book = item
         var _books_Book$: [String: Any] = [:]
         _books_Book$["isbn"] = _books_Book.isbn
         _books_Book$["title"] = _books_Book.title
         _books_Book$["author"] = _books_Book.author
         _books_Book$["pages"] = _books_Book.pages
         _books_Book$["isActivate"] = _books_Book.isActivate
-        var _details_BookDetails = _books_Book.details
+        let _details_BookDetails = _books_Book.details
         var _details_BookDetails$: [String: Any] = [:]
         _details_BookDetails$["pages"] = _details_BookDetails.pages
         _books_Book$["details"] = _details_BookDetails$
+        _books_Book$["id"] = _books_Book.id
         books$.append(_books_Book$)
       }
-      res$["books"] = books$
-      var _book_Book = res.book
+      jsRes["books"] = books$
+      let _book_Book = res.book
       var _book_Book$: [String: Any] = [:]
       _book_Book$["isbn"] = _book_Book.isbn
       _book_Book$["title"] = _book_Book.title
       _book_Book$["author"] = _book_Book.author
       _book_Book$["pages"] = _book_Book.pages
       _book_Book$["isActivate"] = _book_Book.isActivate
-      var _details_BookDetails = _book_Book.details
+      let _details_BookDetails = _book_Book.details
       var _details_BookDetails$: [String: Any] = [:]
       _details_BookDetails$["pages"] = _details_BookDetails.pages
       _book_Book$["details"] = _details_BookDetails$
-      res$["book"] = _book_Book$
+      _book_Book$["id"] = _book_Book.id
+      jsRes["book"] = _book_Book$
       // end response mapping
 
-      resolve(res$)
+      resolve(jsRes)
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }
   }
 
 
-  @objc func GetBook(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = BookServiceClient()
+  @objc func getBook(_ jsReq: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BooksGrpcClient
     var req = Book_GetBookRequest()
 
     // request mapping
-    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    req.isbn = Int64(jsReq["isbn"] as? Int ?? 0)
     // end request mapping
 
     do {
-      let res = try svc.GetBook(req)
-      var res$: [String: Any] = [:]
+      let res = try svc.getBook(req)
+      var jsRes: [String: Any] = [:]
 
       // response mapping
-      res$["isbn"] = res.isbn
+      jsRes["isbn"] = res.isbn
+      jsRes["title"] = res.title
+      jsRes["author"] = res.author
+      jsRes["pages"] = res.pages
+      jsRes["isActivate"] = res.isActivate
+      let _details_BookDetails = res.details
+      var _details_BookDetails$: [String: Any] = [:]
+      _details_BookDetails$["pages"] = _details_BookDetails.pages
+      jsRes["details"] = _details_BookDetails$
+      jsRes["id"] = res.id
       // end response mapping
 
-      resolve(res$)
+      resolve(jsRes)
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }
   }
 
 
-  @objc func GetBooksViaAuthor(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = BookServiceClient()
+  @objc func getBooksViaAuthor(_ jsReq: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BooksGrpcClient
     var req = Book_GetBookViaAuthor()
 
     // request mapping
-    req.author = req$["author"] as? String ?? ""
+    req.author = jsReq["author"] as? String ?? ""
     // end request mapping
 
     do {
-      let res = try svc.GetBooksViaAuthor(req)
-      var res$: [String: Any] = [:]
+      let res = try svc.getBooksViaAuthor(req)
+      var jsRes: [String: Any] = [:]
 
       // response mapping
-      res$["author"] = res.author
+      jsRes["isbn"] = res.isbn
+      jsRes["title"] = res.title
+      jsRes["author"] = res.author
+      jsRes["pages"] = res.pages
+      jsRes["isActivate"] = res.isActivate
+      let _details_BookDetails = res.details
+      var _details_BookDetails$: [String: Any] = [:]
+      _details_BookDetails$["pages"] = _details_BookDetails.pages
+      jsRes["details"] = _details_BookDetails$
+      jsRes["id"] = res.id
       // end response mapping
 
-      resolve(res$)
+      resolve(jsRes)
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }
   }
 
 
-  @objc func GetGreatestBook(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = BookServiceClient()
+  @objc func getGreatestBook(_ jsReq: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BooksGrpcClient
     var req = Book_GetBookRequest()
 
     // request mapping
-    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    req.isbn = Int64(jsReq["isbn"] as? Int ?? 0)
     // end request mapping
 
     do {
-      let res = try svc.GetGreatestBook(req)
-      var res$: [String: Any] = [:]
+      let res = try svc.getGreatestBook(req)
+      var jsRes: [String: Any] = [:]
 
       // response mapping
-      res$["isbn"] = res.isbn
+      jsRes["isbn"] = res.isbn
+      jsRes["title"] = res.title
+      jsRes["author"] = res.author
+      jsRes["pages"] = res.pages
+      jsRes["isActivate"] = res.isActivate
+      let _details_BookDetails = res.details
+      var _details_BookDetails$: [String: Any] = [:]
+      _details_BookDetails$["pages"] = _details_BookDetails.pages
+      jsRes["details"] = _details_BookDetails$
+      jsRes["id"] = res.id
       // end response mapping
 
-      resolve(res$)
+      resolve(jsRes)
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }
   }
 
 
-  @objc func GetBooks(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = BookServiceClient()
+  @objc func getBooks(_ jsReq: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BooksGrpcClient
     var req = Book_GetBookRequest()
 
     // request mapping
-    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    req.isbn = Int64(jsReq["isbn"] as? Int ?? 0)
     // end request mapping
 
     do {
-      let res = try svc.GetBooks(req)
-      var res$: [String: Any] = [:]
+      let res = try svc.getBooks(req)
+      var jsRes: [String: Any] = [:]
 
       // response mapping
-      res$["isbn"] = res.isbn
+      var items$: [[String: Any]] = []
+      for item in res.items {
+        let _items_Book = item
+        var _items_Book$: [String: Any] = [:]
+        _items_Book$["isbn"] = _items_Book.isbn
+        _items_Book$["title"] = _items_Book.title
+        _items_Book$["author"] = _items_Book.author
+        _items_Book$["pages"] = _items_Book.pages
+        _items_Book$["isActivate"] = _items_Book.isActivate
+        let _details_BookDetails = _items_Book.details
+        var _details_BookDetails$: [String: Any] = [:]
+        _details_BookDetails$["pages"] = _details_BookDetails.pages
+        _items_Book$["details"] = _details_BookDetails$
+        _items_Book$["id"] = _items_Book.id
+        items$.append(_items_Book$)
+      }
+      jsRes["items"] = items$
       // end response mapping
 
-      resolve(res$)
+      resolve(jsRes)
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }

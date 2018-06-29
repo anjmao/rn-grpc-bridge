@@ -9,6 +9,7 @@ message Book {
     int32 pages = 4;
     bool isActivate = 5;
     BookDetails details = 6;
+    int32 id = 7;
 }
 
 message BookDetails {
@@ -67,7 +68,7 @@ message GetTypesResponse {
     Book book = 17;
 }
 
-service BookService {
+service Books {
     rpc GetTypes (GetTypesRequest) returns (GetTypesResponse) {}
     rpc GetBook (GetBookRequest) returns (Book) {}
     rpc GetBooksViaAuthor (GetBookViaAuthor) returns (stream Book) {}

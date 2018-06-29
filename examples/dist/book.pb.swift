@@ -87,6 +87,11 @@ struct Book_Book {
   /// Clears the value of `details`. Subsequent reads from it will return its default value.
   mutating func clearDetails() {_storage._details = nil}
 
+  var id: Int32 {
+    get {return _storage._id}
+    set {_uniqueStorage()._id = newValue}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -399,6 +404,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     4: .same(proto: "pages"),
     5: .same(proto: "isActivate"),
     6: .same(proto: "details"),
+    7: .same(proto: "id"),
   ]
 
   fileprivate class _StorageClass {
@@ -408,6 +414,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     var _pages: Int32 = 0
     var _isActivate: Bool = false
     var _details: Book_BookDetails? = nil
+    var _id: Int32 = 0
 
     static let defaultInstance = _StorageClass()
 
@@ -420,6 +427,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       _pages = source._pages
       _isActivate = source._isActivate
       _details = source._details
+      _id = source._id
     }
   }
 
@@ -441,6 +449,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         case 4: try decoder.decodeSingularInt32Field(value: &_storage._pages)
         case 5: try decoder.decodeSingularBoolField(value: &_storage._isActivate)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._details)
+        case 7: try decoder.decodeSingularInt32Field(value: &_storage._id)
         default: break
         }
       }
@@ -467,6 +476,9 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if let v = _storage._details {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
       }
+      if _storage._id != 0 {
+        try visitor.visitSingularInt32Field(value: _storage._id, fieldNumber: 7)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -482,6 +494,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         if _storage._pages != other_storage._pages {return false}
         if _storage._isActivate != other_storage._isActivate {return false}
         if _storage._details != other_storage._details {return false}
+        if _storage._id != other_storage._id {return false}
         return true
       }
       if !storagesAreEqual {return false}

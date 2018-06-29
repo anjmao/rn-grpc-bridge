@@ -1,18 +1,17 @@
 // package: {{{packageName}}}
 // file: {{{fileName}}}
 
-{{#each imports}}
-{{{this}}}
-{{/each}}
+import Foundation
+import SwiftGRPC
 
 {{#each services}}
-@objc({{{serviceName}}})
-class {{{serviceName}}}: NSObject, GrpcService {
+@objc({{{serviceName}}}Service)
+class {{{serviceName}}}Service: GrpcService {
 
 {{#each methods}}
 
-  @objc func {{{methodName}}}(_ {{{requestMapFrom}}}: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = {{{serviceName}}}Client()
+  @objc func {{{lcFirst methodName}}}(_ {{{requestMapFrom}}}: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = {{{serviceName}}}GrpcClient
     var {{{requestMapTo}}} = {{{requestTypeName}}}
 
     // request mapping
@@ -20,7 +19,7 @@ class {{{serviceName}}}: NSObject, GrpcService {
     // end request mapping
 
     do {
-      let {{{responseMapFrom}}} = try svc.{{{methodName}}}({{{requestMapTo}}})
+      let {{{responseMapFrom}}} = try svc.{{{lcFirst methodName}}}({{{requestMapTo}}})
       var {{{responseMapTo}}}: [String: Any] = [:]
 
       // response mapping

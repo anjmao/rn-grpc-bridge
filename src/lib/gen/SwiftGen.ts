@@ -36,10 +36,10 @@ export interface ServiceMethodType {
     type: string; // 'ClientUnaryCall' || 'ClientWritableStream' || 'ClientReadableStream' || 'ClientDuplexStream'
 }
 
-const REQUEST_MAP_FROM = 'req$';
-const REQUEST_MAP_TO = 'req';
-const RESPONSE_MAP_FROM = 'res';
-const RESPONSE_MAP_TO = 'res$';
+export const REQUEST_MAP_FROM = 'jsReq';
+export const REQUEST_MAP_TO = 'req';
+export const RESPONSE_MAP_FROM = 'res';
+export const RESPONSE_MAP_TO = 'jsRes';
 
 export const defaultServiceMethodType = JSON.stringify({
     packageName: '',
@@ -65,14 +65,9 @@ export function gen(descriptor: FileDescriptorProto): string {
 
     let fileName = descriptor.getName();
     let packageName = getPackageName(descriptor.getPackage());
-
-    let imports: Array<string> = [];
     let services: Array<ServiceType> = [];
-
     const messageTypes = descriptor.getMessageTypeList();
 
-    imports.push(`import Foundation`);
-    imports.push(`import SwiftGRPC`);
 
     descriptor.getServiceList().forEach(service => {
         let serviceData = JSON.parse(defaultServiceType) as ServiceType;
@@ -93,7 +88,7 @@ export function gen(descriptor: FileDescriptorProto): string {
             methodData.requestTypeName = `${packageName}_${inputType.getName()}()`;
             methodData.responseTypeName = `${packageName}_${outputType.getName()}()`;
             methodData.requestMapping = formatRequest(packageName, messageTypes, inputType);
-            methodData.responseMapping = formatResponse(messageTypes, inputType);
+            methodData.responseMapping = formatResponse(messageTypes, outputType);
 
             if (!methodData.requestStream && !methodData.responseStream) {
                 methodData.type = 'ClientUnaryCall';
@@ -118,7 +113,6 @@ export function gen(descriptor: FileDescriptorProto): string {
     return TplEngine.render('svc_swift', {
         packageName: packageName,
         fileName: fileName,
-        imports: imports,
         services: services,
     });
 }
@@ -137,10 +131,16 @@ function getPackageName(pkg: string) {
 }
 
 function mapProtoDescriptor(input: DescriptorProto): MappingProto {
+    const mapFieldName = (name: string) => {
+        if (name.length > 2 && name.endsWith('Id')) {
+            return name.slice(0 , name.length - 2) + 'ID';
+        }
+        return name;
+    };
     return <MappingProto>{
         name: input.getName(),
         fields: input.getFieldList().map(f => (<MappingProtoField>{ 
-            name: f.getName(),
+            name: mapFieldName(f.getName()),
             typeName: f.getTypeName().split('.').pop(),
             type: f.getType(),
             repeated: f.getLabel() === FieldDescriptorProto.Label.LABEL_REPEATED

@@ -1,0 +1,12 @@
+#import <Foundation/Foundation.h>
+#import <React/RCTBridgeModule.h>
+
+{{#each services}}
+@interface RCT_EXTERN_MODULE({{{serviceName}}}Service, NSObject)
+
+{{#each methods}}
+RCT_EXTERN_METHOD({{{lcFirst methodName}}}:(NSDictionary *){{{requestMapFrom}}} resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
+{{/each}}
+
+@end
+{{/each}}

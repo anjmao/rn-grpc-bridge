@@ -139,7 +139,7 @@ export function genResponseMappings(opt: GenResponseMappingsOptions): string[] {
             const newMapTo = `_${f.name}_${f.typeName}$`;
             const newMapFrom = `_${f.name}_${f.typeName}`;
             const mapFromTmp = repeated ? 'item' : `${oldMapFrom}.${f.name}`;
-            g(i, `var ${newMapFrom} = ${mapFromTmp}`);
+            g(i, `let ${newMapFrom} = ${mapFromTmp}`);
             g(i, `var ${newMapTo}: [String: Any] = [:]`);
             const child = opt.messages.find(x => x.name === f.typeName);
             gen(i, child, newMapFrom, newMapTo);

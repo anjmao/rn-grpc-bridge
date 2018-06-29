@@ -3,6 +3,7 @@ import { CodeGeneratorRequest, CodeGeneratorResponse } from 'google-protobuf/goo
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
 
 import * as SwiftGen from './lib/gen/SwiftGen';
+import * as SwiftGenHeaderBridge from './lib/gen/SwiftGenHeaderBridge';
 
 Utility.withAllStdIn((inputBuff: Buffer) => {
 
@@ -20,7 +21,7 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
         });
 
         codeGenRequest.getFileToGenerateList().forEach(fileName => {
-            // service part
+            // swift service
             let fileDescriptorOutput = SwiftGen.gen(fileNameToDescriptor[fileName]);
             if (fileDescriptorOutput !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
@@ -29,6 +30,17 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
                 svtTsdFile.setContent(fileDescriptorOutput);
                 codeGenResponse.addFile(svtTsdFile);
             }
+
+            // swift service
+            let fileHeaderBridge = SwiftGenHeaderBridge.gen(fileNameToDescriptor[fileName]);
+            if (fileHeaderBridge !== '') {
+                let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
+                let svtTsdFile = new CodeGeneratorResponse.File();
+                svtTsdFile.setName(`${svcFileName}_header.m`);
+                svtTsdFile.setContent(fileHeaderBridge);
+                codeGenResponse.addFile(svtTsdFile);
+            }
+
         });
 
         process.stdout.write(new Buffer(codeGenResponse.serializeBinary()));
