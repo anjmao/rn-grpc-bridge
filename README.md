@@ -2,9 +2,12 @@
 If you are developing React Native app and using gRPC for backend communication when you need to bind native gRPC Swift/Android packages and communicate between native and javascript.
 React Native accepts only Dictionaries and Arrays with primitive types.
 
-### Features
+## Features
 
-
+- [x] Generate Swift code for JS mappings
+- [ ] Generate iOS Swift bridge header
+- [ ] Generate Android code for JS mappings
+- [ ] Generate Typescript interfaces for JS/TS
 
 ### Example Use case
 
