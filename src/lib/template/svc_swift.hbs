@@ -11,19 +11,23 @@ class {{{serviceName}}}: NSObject, GrpcService {
 
 {{#each methods}}
 
-  @objc func {{{methodName}}}(_ req: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+  @objc func {{{methodName}}}(_ {{{requestMapFrom}}}: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     let svc = {{{serviceName}}}Client()
-    var root = {{{requestTypeName}}}
-// ----request mapping---- 
+    var {{{requestMapTo}}} = {{{requestTypeName}}}
+
+// request mapping
 {{{requestMapping}}}
-// ----end request mapping----
+// end request mapping
+
     do {
-      let rsp = try svc.{{{methodName}}}(r)
-      var res: [String: Any] = [:]
-      {{#each responseFields}}
-      {{{value}}}
-      {{/each}}
-      resolve(res)
+      let {{{responseMapFrom}}} = try svc.{{{methodName}}}({{{requestMapTo}}})
+      var {{{responseMapTo}}}: [String: Any] = [:]
+
+// response mapping
+{{{responseMapping}}}
+// end response mapping
+
+      resolve({{{responseMapTo}}})
     } catch {
       reject("ERROR", error.localizedDescription, error)
     }

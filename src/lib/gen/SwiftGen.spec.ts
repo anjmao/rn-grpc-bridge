@@ -1,9 +1,5 @@
 import { gen } from './SwiftGen';
-import { FieldDescriptorProto, FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-
-type PartialMock<T> = {
-    [P in keyof T]?: jest.Mock<T>;
-};
+import { FieldDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
 
 describe('SwiftGen', () => {
     it('should generate', () => {
@@ -47,13 +43,28 @@ describe('SwiftGen', () => {
                     getFieldList: () => ([
                         {
                             getName: () => 'name',
+                            getTypeName: () => '',
                             getType: () => FieldDescriptorProto.Type.TYPE_STRING,
                             getLabel: () => FieldDescriptorProto.Label.LABEL_REPEATED
                         }
                     ])
                 },
                 {
-                    getName: () => 'GetBookReply'
+                    getName: () => 'GetBookReply',
+                    getFieldList: () => ([
+                        {
+                            getName: () => 'name',
+                            getTypeName: () => '',
+                            getType: () => FieldDescriptorProto.Type.TYPE_STRING,
+                            getLabel: () => FieldDescriptorProto.Label.LABEL_REPEATED
+                        },
+                        {
+                            getName: () => 'book',
+                            getTypeName: () => '.book.Book',
+                            getType: () => FieldDescriptorProto.Type.TYPE_STRING,
+                            getLabel: () => FieldDescriptorProto.Label.LABEL_REPEATED
+                        }
+                    ]),
                 }
             ])
         };

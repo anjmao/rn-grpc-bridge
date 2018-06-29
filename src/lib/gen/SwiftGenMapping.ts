@@ -18,48 +18,57 @@ export interface GenRequestMappingOptions {
     packageName: string;
     messages: MappingProto[];
     message: MappingProto;
-    root: string;
-    root$: string;
+    mapFrom: string;
+    mapTo: string;
+}
+
+export interface GenResponseMappingsOptions {
+    indent: number;
+    messages: MappingProto[];
+    message: MappingProto;
+    mapFrom: string;
+    mapTo: string;
 }
 
 export function genRequestFields(opt: GenRequestMappingOptions): string[] {
     const res: string[] = [];
-    const gen = (indent: number, message: MappingProto, root: string, root$: string) => {
+    const t = FieldDescriptorProto.Type;
+    const gen = (indent: number, message: MappingProto, mapFrom: string, mapTo: string) => {
         if (!message) {
             return;
         }
         const g = (i, val) => res.push(generateIndent(i) + val);
+
         const genAssign = (f, cast) => {
-            g(indent, `${root}.${f.name} = ${cast(`${root$}["${f.name}"]`)}`)
+            g(indent, `${mapTo}.${f.name} = ${cast(`${mapFrom}["${f.name}"]`)}`)
         };
+
         const genChildAssign = (i, f, repeated) => {
-            const oldRoot = root;
-            const oldRoot$ = root$
-            const newRoot = `${f.name}_${f.typeName}`;
-            const newRoot$ = `${f.name}_${f.typeName}$`;
-            const mapFrom = repeated ? 'item' : `${oldRoot$}["${f.name}"]`;
-            g(i, `if let ${newRoot$} = ${mapFrom} as? [String: Any] {`)
-            g(i + 1, `var ${newRoot} = ${f.typeName}()`);
+            const oldMapTo = mapTo;
+            const oldMapFrom = mapFrom
+            const newMapTo = `${f.name}_${f.typeName}`;
+            const newMapFrom = `${f.name}_${f.typeName}$`;
+            mapFrom = repeated ? 'item' : `${oldMapFrom}["${f.name}"]`;
+            g(i, `if let ${newMapFrom} = ${mapFrom} as? [String: Any] {`)
+            g(i + 1, `var ${newMapTo} = ${f.typeName}()`);
             const child = opt.messages.find(x => x.name === f.typeName);
-            gen(i + 1, child, newRoot, newRoot$);
+            gen(i + 1, child, newMapFrom, newMapTo);
             if (repeated) {
-                g(i + 1, `${oldRoot}.${f.name}.append(${newRoot})`)
+                g(i + 1, `${oldMapTo}.${f.name}.append(${newMapTo})`)
             } else {
-                g(i + 1, `${oldRoot}.${f.name} = ${newRoot}`);
+                g(i + 1, `${oldMapTo}.${f.name} = ${newMapTo}`);
             }
             g(i, `}`)
         };
 
         const genChildRepeatedAssign = (f) => {
-            const oldRoot$ = root$
-            g(indent, `if let arr = ${oldRoot$}["${f.name}"] as? [[String: Any]] {`)
+            g(indent, `if let arr = ${mapFrom}["${f.name}"] as? [[String: Any]] {`)
             g(indent + 1, `for item in arr {`)
             genChildAssign(indent + 2, f, true)
             g(indent + 1, `}`)
             g(indent, `}`)
         };
 
-        const t = FieldDescriptorProto.Type;
         for (let f of message.fields) {
             switch (f.type) {
                 case t.TYPE_STRING:
@@ -109,7 +118,62 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
         }
     };
 
-    gen(opt.indent, opt.message, opt.root, opt.root$);
+    gen(opt.indent, opt.message, opt.mapFrom, opt.mapTo);
+
+    return res;
+}
+
+export function genResponseMappings(opt: GenResponseMappingsOptions): string[] {
+    const res: string[] = [];
+    const t = FieldDescriptorProto.Type;
+    const gen = (indent: number, message: MappingProto, mapFrom: string, mapTo: string) => {
+        const g = (i, val) => res.push(generateIndent(i) + val);
+
+        const genAssign = (f) => {
+            g(indent, `${mapTo}["${f.name}"] = ${mapFrom}.${f.name}`)
+        };
+
+        const genChildAssign = (i, f, repeated) => {
+            const oldMapTo = mapTo;
+            const oldMapFrom = mapFrom
+            const newMapTo = `_${f.name}_${f.typeName}$`;
+            const newMapFrom = `_${f.name}_${f.typeName}`;
+            const mapFromTmp = repeated ? 'item' : `${oldMapFrom}.${f.name}`;
+            g(i, `var ${newMapFrom} = ${mapFromTmp}`);
+            g(i, `var ${newMapTo}: [String: Any] = [:]`);
+            const child = opt.messages.find(x => x.name === f.typeName);
+            gen(i, child, newMapFrom, newMapTo);
+            if (repeated) {
+                g(i, `${f.name}$.append(${newMapTo})`)
+            } else {
+                g(i, `${oldMapTo}["${f.name}"] = ${newMapTo}`);
+            }
+        };
+
+        const genChildRepeatedAssign = (f) => {
+            g(indent, `var ${f.name}$: [[String: Any]] = []`)
+            g(indent, `for item in ${mapFrom}.${f.name} {`)
+            genChildAssign(indent + 1, f, true)
+            g(indent, `}`)
+            g(indent, `${mapTo}["${f.name}"] = ${f.name}$`)
+        };
+
+        for (let f of message.fields) {
+            switch (f.type) {
+                case (t.TYPE_MESSAGE):
+                    if (f.repeated) {
+                        genChildRepeatedAssign(f);
+                    } else {
+                        genChildAssign(indent, f, false)
+                    }
+                    break;
+                default:
+                    genAssign(f)
+            }
+        }
+    };
+
+    gen(opt.indent, opt.message, opt.mapFrom, opt.mapTo);
 
     return res;
 }

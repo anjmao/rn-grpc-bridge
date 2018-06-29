@@ -1,13 +1,19 @@
 import { FileDescriptorProto, DescriptorProto, FieldDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
 import * as TplEngine from '../TplEngine';
-import * as fs from 'fs';
-import { GenRequestMappingOptions, MappingProto, MappingProtoField, genRequestFields } from './SwiftGenMapping';
+import { 
+    GenRequestMappingOptions,
+    MappingProto, 
+    MappingProtoField,
+    genRequestFields,
+    genResponseMappings,
+    GenResponseMappingsOptions
+} from './SwiftGenMapping';
+
 
 export interface ServiceType {
     serviceName: string;
     methods: Array<ServiceMethodType>;
 }
-
 export const defaultServiceType = JSON.stringify({
     serviceName: '',
     methods: [],
@@ -23,8 +29,17 @@ export interface ServiceMethodType {
     responseStream: boolean;
     requestTypeName: string;
     responseTypeName: string;
+    requestMapFrom: string;
+    requestMapTo: string;
+    responseMapFrom: string;
+    responseMapTo: string;
     type: string; // 'ClientUnaryCall' || 'ClientWritableStream' || 'ClientReadableStream' || 'ClientDuplexStream'
 }
+
+const REQUEST_MAP_FROM = 'req$';
+const REQUEST_MAP_TO = 'req';
+const RESPONSE_MAP_FROM = 'res';
+const RESPONSE_MAP_TO = 'res$';
 
 export const defaultServiceMethodType = JSON.stringify({
     packageName: '',
@@ -36,24 +51,17 @@ export const defaultServiceMethodType = JSON.stringify({
     responseMapping: '',
     requestTypeName: '',
     responseTypeName: '',
+    requestMapFrom: REQUEST_MAP_FROM,
+    requestMapTo: REQUEST_MAP_TO,
+    responseMapFrom: RESPONSE_MAP_FROM,
+    responseMapTo: RESPONSE_MAP_TO,
     type: '',
 } as ServiceMethodType);
-
-function logJSON(val) {
-    fs.appendFileSync('./log.json', JSON.stringify(val) + '\n')
-}
-
-function clearLog() {
-    fs.writeFileSync('./log.json', '');
-}
 
 export function gen(descriptor: FileDescriptorProto): string {
     if (descriptor.getServiceList().length === 0) {
         return '';
     }
-
-    clearLog();
-    // logJSON('');
 
     let fileName = descriptor.getName();
     let packageName = getPackageName(descriptor.getPackage());
@@ -84,9 +92,8 @@ export function gen(descriptor: FileDescriptorProto): string {
             methodData.responseStream = method.getServerStreaming();
             methodData.requestTypeName = `${packageName}_${inputType.getName()}()`;
             methodData.responseTypeName = `${packageName}_${outputType.getName()}()`;
-            methodData.requestMapping = formatRequest(packageName, [], inputType);
-
-            // methodData.responseFields = formatResponseFields(packageName, messageTypes, outputType);
+            methodData.requestMapping = formatRequest(packageName, messageTypes, inputType);
+            methodData.responseMapping = formatResponse(messageTypes, inputType);
 
             if (!methodData.requestStream && !methodData.responseStream) {
                 methodData.type = 'ClientUnaryCall';
@@ -129,30 +136,39 @@ function getPackageName(pkg: string) {
     return pkg[0].toUpperCase() + pkg.slice(1);
 }
 
+function mapProtoDescriptor(input: DescriptorProto): MappingProto {
+    return <MappingProto>{
+        name: input.getName(),
+        fields: input.getFieldList().map(f => (<MappingProtoField>{ 
+            name: f.getName(),
+            typeName: f.getTypeName().split('.').pop(),
+            type: f.getType(),
+            repeated: f.getLabel() === FieldDescriptorProto.Label.LABEL_REPEATED
+        }))
+    }
+}
+
 function formatRequest(packageName: string, messageTypes: DescriptorProto[], inputType: DescriptorProto) {
-
-    const mapProto = (input: DescriptorProto) => {
-        return <MappingProto>{
-            name: input.getName(),
-            fields: input.getFieldList().map(f => (<MappingProtoField>{ 
-                name: f.getName(),
-                typeName: f.getTypeName().split('.').pop(),
-                type: f.getType(),
-                repeated: f.getLabel() === FieldDescriptorProto.Label.LABEL_REPEATED
-            }))
-        }
-    };
-
-    logJSON(mapProto(inputType))
-
-    const req: GenRequestMappingOptions = <any>{
+    const req: GenRequestMappingOptions = {
         packageName: packageName,
         indent: 0,
-        messages: messageTypes.map(x => mapProto(x)),
-        message: mapProto(inputType),
-        root: 'root',
-        root$: 'root$'
+        messages: messageTypes.map(x => mapProtoDescriptor(x)),
+        message: mapProtoDescriptor(inputType),
+        mapFrom: REQUEST_MAP_FROM,
+        mapTo: REQUEST_MAP_TO
     }
     const fields = genRequestFields(req);
+    return fields.join('\n');
+}
+
+function formatResponse(messageTypes: DescriptorProto[], inputType: DescriptorProto) {
+    const req: GenResponseMappingsOptions = {
+        indent: 0,
+        messages: messageTypes.map(x => mapProtoDescriptor(x)),
+        message: mapProtoDescriptor(inputType),
+        mapFrom: RESPONSE_MAP_FROM,
+        mapTo: RESPONSE_MAP_TO
+    }
+    const fields = genResponseMappings(req);
     return fields.join('\n');
 }
