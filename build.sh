@@ -14,16 +14,17 @@ PROTO_DEST=./dist
 rm -rf ${PROTO_DEST}
 mkdir -p ${PROTO_DEST}
 
-# JavaScript code generating
+# Swift react native bridge generation
 protoc \
---ts_out=${PROTO_DEST} \
---plugin=protoc-gen-ts=./rn-grpc-bridge.js \
+--rn_out=${PROTO_DEST} \
+--plugin=protoc-gen-rn=./rn-grpc-bridge.js \
 -I ./proto \
 proto/*.proto
 
-# protoc \
-# --swift_out=${PROTO_DEST} \
-# --plugin=protoc-gen-swiftgrpc=../node_modules/grpc-plugins/osx/protoc-gen-swiftgrpc \
-# --swiftgrpc_out=${PROTO_DEST} \
-# -I ./proto \
-# ./proto/*.proto
+# Swift proto and grpc
+protoc \
+--swift_out=${PROTO_DEST} \
+--plugin=protoc-gen-swiftgrpc=../node_modules/grpc-plugins/osx/protoc-gen-swiftgrpc \
+--swiftgrpc_out=${PROTO_DEST} \
+-I ./proto \
+./proto/*.proto

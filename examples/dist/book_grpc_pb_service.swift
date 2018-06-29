@@ -1,75 +1,12 @@
-# React Native gRPC Swift/Java bridge generator
-If you are developing React Native app and using gRPC for backend communication when you need to bind native gRPC Swift/Android packages and communicate between native and javascript.
-React Native accepts only Dictionaries and Arrays with primitive types.
+// package: Book
+// file: book.proto
 
-### Features
+import Foundation
+import SwiftGRPC
 
-
-
-### Example Use case
-
-1. Lets say we have proto
-```
-message Book {
-    int64 isbn = 1;
-    string title = 2;
-    string author = 3;
-    int32 pages = 4;
-    bool isActivate = 5;
-    BookDetails details = 6;
-}
-
-message GetTypesRequest {
-    double dbl = 1;
-    float flt = 2;
-    int32 intr32 = 3;
-    int64 intr64 = 4;
-    uint32 uintr32 = 5;
-    uint64 uintr64 = 6;
-    sint32 suint32 = 7;
-    sint64 suint64 = 8;
-    fixed32	fxd32 = 9;
-    fixed64	fxd64 = 10;
-    sfixed32 sfxd32 = 11;
-    sfixed64 sfxd64 = 12;
-    bool bln = 13;
-    string str = 14;
-    bytes bytx = 15;
-    repeated Book books = 16;
-    Book book = 17;
-}
-
-message GetTypesResponse {
-    double dbl = 1;
-    float flt = 2;
-    int32 intr32 = 3;
-    int64 intr64 = 4;
-    uint32 uintr32 = 5;
-    uint64 uintr64 = 6;
-    sint32 suint32 = 7;
-    sint64 suint64 = 8;
-    fixed32	fxd32 = 9;
-    fixed64	fxd64 = 10;
-    sfixed32 sfxd32 = 11;
-    sfixed64 sfxd64 = 12;
-    bool bln = 13;
-    string str = 14;
-    bytes bytx = 15;
-    repeated Book books = 16;
-    Book book = 17;
-}
-
-service BookService {
-    rpc GetTypes (GetTypesRequest) returns (GetTypesResponse) {}
-}
-
-```
-
-2. Now if you want to call GetTypes method from javascript you need to write all these mappings
-
-```swift
 @objc(BookService)
 class BookService: NSObject, GrpcService {
+
 
   @objc func GetTypes(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     let svc = BookServiceClient()
@@ -180,26 +117,102 @@ class BookService: NSObject, GrpcService {
       reject("ERROR", error.localizedDescription, error)
     }
   }
+
+
+  @objc func GetBook(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BookServiceClient()
+    var req = Book_GetBookRequest()
+
+    // request mapping
+    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    // end request mapping
+
+    do {
+      let res = try svc.GetBook(req)
+      var res$: [String: Any] = [:]
+
+      // response mapping
+      res$["isbn"] = res.isbn
+      // end response mapping
+
+      resolve(res$)
+    } catch {
+      reject("ERROR", error.localizedDescription, error)
+    }
+  }
+
+
+  @objc func GetBooksViaAuthor(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BookServiceClient()
+    var req = Book_GetBookViaAuthor()
+
+    // request mapping
+    req.author = req$["author"] as? String ?? ""
+    // end request mapping
+
+    do {
+      let res = try svc.GetBooksViaAuthor(req)
+      var res$: [String: Any] = [:]
+
+      // response mapping
+      res$["author"] = res.author
+      // end response mapping
+
+      resolve(res$)
+    } catch {
+      reject("ERROR", error.localizedDescription, error)
+    }
+  }
+
+
+  @objc func GetGreatestBook(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BookServiceClient()
+    var req = Book_GetBookRequest()
+
+    // request mapping
+    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    // end request mapping
+
+    do {
+      let res = try svc.GetGreatestBook(req)
+      var res$: [String: Any] = [:]
+
+      // response mapping
+      res$["isbn"] = res.isbn
+      // end response mapping
+
+      resolve(res$)
+    } catch {
+      reject("ERROR", error.localizedDescription, error)
+    }
+  }
+
+
+  @objc func GetBooks(_ req$: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let svc = BookServiceClient()
+    var req = Book_GetBookRequest()
+
+    // request mapping
+    req.isbn = Int64(req$["isbn"] as? Int ?? 0)
+    // end request mapping
+
+    do {
+      let res = try svc.GetBooks(req)
+      var res$: [String: Any] = [:]
+
+      // response mapping
+      res$["isbn"] = res.isbn
+      // end response mapping
+
+      resolve(res$)
+    } catch {
+      reject("ERROR", error.localizedDescription, error)
+    }
+  }
+
+  
+  @objc
+  static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
 }
-```
-
-3. rn-grpc-bridge generator can do it for you
-
-### Usage
-
-Install
-```
-yarn add rn-grpc-bridge --dev
-```
-
-Compile using protoc compiler
-```shell
-protoc \
---rn_out=${OUTDIR} \
---plugin=protoc-gen-rn=./node_modules/.bin/rn-grpc-bridge \
--I ./proto \
-proto/*.proto
-```
-
-
-

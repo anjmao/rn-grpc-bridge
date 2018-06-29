@@ -1,1 +1,0 @@
-{"name":"GetBookRequest","fields":[{"name":"name","typeName":"","type":9,"repeated":true},{"name":"book","typeName":"Book","type":9,"repeated":true}]}

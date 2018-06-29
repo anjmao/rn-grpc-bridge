@@ -15,17 +15,17 @@ class {{{serviceName}}}: NSObject, GrpcService {
     let svc = {{{serviceName}}}Client()
     var {{{requestMapTo}}} = {{{requestTypeName}}}
 
-// request mapping
+    // request mapping
 {{{requestMapping}}}
-// end request mapping
+    // end request mapping
 
     do {
       let {{{responseMapFrom}}} = try svc.{{{methodName}}}({{{requestMapTo}}})
       var {{{responseMapTo}}}: [String: Any] = [:]
 
-// response mapping
+      // response mapping
 {{{responseMapping}}}
-// end response mapping
+      // end response mapping
 
       resolve({{{responseMapTo}}})
     } catch {

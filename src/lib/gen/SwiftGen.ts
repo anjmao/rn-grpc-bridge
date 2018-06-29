@@ -158,7 +158,7 @@ function formatRequest(packageName: string, messageTypes: DescriptorProto[], inp
         mapTo: REQUEST_MAP_TO
     }
     const fields = genRequestFields(req);
-    return fields.join('\n');
+    return fields.map(r => `    ${r}`).join('\n');
 }
 
 function formatResponse(messageTypes: DescriptorProto[], inputType: DescriptorProto) {
@@ -170,5 +170,5 @@ function formatResponse(messageTypes: DescriptorProto[], inputType: DescriptorPr
         mapTo: RESPONSE_MAP_TO
     }
     const fields = genResponseMappings(req);
-    return fields.join('\n');
+    return fields.map(r => `      ${r}`).join('\n');
 }

@@ -25,7 +25,7 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
             if (fileDescriptorOutput !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
                 let svtTsdFile = new CodeGeneratorResponse.File();
-                svtTsdFile.setName(svcFileName + '.swift');
+                svtTsdFile.setName(`${svcFileName}_service.swift`);
                 svtTsdFile.setContent(fileDescriptorOutput);
                 codeGenResponse.addFile(svtTsdFile);
             }
