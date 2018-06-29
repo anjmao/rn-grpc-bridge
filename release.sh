@@ -1,12 +1,9 @@
 #!/bin/bash
 
-BASEDIR=$(dirname "$0")
-cd ${BASEDIR}/../
+BUILD_OUT=./build
+# build lib
+rm -rf ${BUILD_OUT}
+tsc -p tsconfig.json
+cp -r ./src/lib/template ./build/lib
 
-cp -r src/lib/template ./build/lib
-git add .
-git commit -m "Update."
-
-npm version patch
-npm publish
-git push origin master --verbose
+yarn publish --access=public
