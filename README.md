@@ -6,9 +6,11 @@ React Native accepts only Dictionaries and Arrays with primitive types.
 
 ## Features
 
-- [x] Generate Swift code for JS mappings
+- [x] Generate Swift Unary calls code for JS mappings
 - [ ] Generate iOS Swift bridge header
-- [ ] Generate Android code for JS mappings
+- [x] Generate Swift Streaming calls code for JS mappings
+- [ ] Generate Android Unary code for JS mappings
+- [ ] Generate Android Streaming code for JS mappings
 - [ ] Generate Typescript interfaces for JS/TS
 
 ### Example Use case
