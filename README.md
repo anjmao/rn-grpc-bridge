@@ -1,12 +1,16 @@
+[![npm version](https://badge.fury.io/js/rn-grpc-bridge.svg)](https://badge.fury.io/js/rn-grpc-bridge)
+
 # React Native gRPC Swift/Java bridge generator
 If you are developing React Native app and using gRPC for backend communication when you need to bind native gRPC Swift/Android packages and communicate between native and javascript.
 React Native accepts only Dictionaries and Arrays with primitive types.
 
 ## Features
 
-- [x] Generate Swift code for JS mappings
+- [x] Generate Swift Unary calls code for JS mappings
 - [ ] Generate iOS Swift bridge header
-- [ ] Generate Android code for JS mappings
+- [ ] Generate Swift Streaming calls code for JS mappings
+- [ ] Generate Android Unary code for JS mappings
+- [ ] Generate Android Streaming code for JS mappings
 - [ ] Generate Typescript interfaces for JS/TS
 
 ### Example Use case
@@ -190,12 +194,12 @@ class BookService: NSObject, GrpcService {
 
 ### Usage
 
-Install
+1. Install
 ```
 yarn add rn-grpc-bridge --dev
 ```
 
-Compile using protoc compiler
+2. Compile using protoc compiler
 ```shell
 protoc \
 --rn_out=${OUTDIR} \
@@ -204,5 +208,18 @@ protoc \
 proto/*.proto
 ```
 
+3. Add generated files to you react native ios/java
 
+For Swift create base class to setup grpc clients
+```swift
+import UIKit
+import SwiftGRPC
+
+@objc(GrpcService)
+class GrpcService: NSObject {
+  var Debug1GrpcClient = Debug_Debug1ServiceClient(address: "127.0.0.1:50051", secure: false)
+  var Debug2GrpcClient = Debug_Debug2ServiceClient(address: "127.0.0.1:50051", secure: false)
+}
+
+```
 
