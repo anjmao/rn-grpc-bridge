@@ -70,12 +70,10 @@ export interface SpecialCases {
   var?: string;
 }
 
-
 export interface BooksService {
-    getTypes(req: GetTypesRequest): Promise<GetTypesResponse>
-    getBook(req: GetBookRequest): Promise<Book>
-    getBooksViaAuthor(req: GetBookViaAuthor): Promise<Book>
-    getGreatestBook(req: GetBookRequest): Promise<Book>
-    getBooks(req: GetBookRequest): Promise<GetBooksResponse>
+    getTypes(req: GetTypesRequest): Promise<GetTypesResponse>;
+    getBook(req: GetBookRequest): Promise<Book>;
+    getBooksViaAuthor(req: GetBookViaAuthor): Promise<Book>;
+    getGreatestBook(req: GetBookRequest): Promise<Book>;
+    getBooks(req: GetBookRequest): Promise<GetBooksResponse>;
 }
-

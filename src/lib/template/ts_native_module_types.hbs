@@ -2,11 +2,9 @@
 {{{messagesInterfacesOut}}}
 
 {{#each services}}
-
 export interface {{{serviceName}}}Service {
     {{#each methods}}
-    {{{lcFirst methodName}}}(req: {{{requestTypeName}}}): Promise<{{{responseTypeName}}}>
+    {{{lcFirst methodName}}}(req: {{{requestTypeName}}}): Promise<{{{responseTypeName}}}>;
     {{/each}}
 }
-
 {{/each}}
