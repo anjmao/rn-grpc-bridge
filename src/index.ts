@@ -27,7 +27,7 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
             if (tsTypes !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
                 let svtTsdFile = new CodeGeneratorResponse.File();
-                svtTsdFile.setName(`${svcFileName}.d.ts`);
+                svtTsdFile.setName(`${svcFileName}_types.ts`);
                 svtTsdFile.setContent(tsTypes);
                 codeGenResponse.addFile(svtTsdFile);
             }
