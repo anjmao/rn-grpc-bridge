@@ -1,9 +1,9 @@
 import * as Utility from './lib/Utility';
 import { CodeGeneratorRequest, CodeGeneratorResponse } from 'google-protobuf/google/protobuf/compiler/plugin_pb';
 import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-
 import * as SwiftGen from './lib/gen/SwiftGen';
 import * as SwiftGenHeaderBridge from './lib/gen/SwiftGenHeaderBridge';
+import * as TsNativeModuleTypes from './lib/gen/TsNativeModuleTypes';
 
 Utility.withAllStdIn((inputBuff: Buffer) => {
 
@@ -21,6 +21,17 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
         });
 
         codeGenRequest.getFileToGenerateList().forEach(fileName => {
+
+            // react NativeModules grpc bridge types
+            let tsTypes = TsNativeModuleTypes.gen(fileNameToDescriptor[fileName]);
+            if (tsTypes !== '') {
+                let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
+                let svtTsdFile = new CodeGeneratorResponse.File();
+                svtTsdFile.setName(`${svcFileName}.d.ts`);
+                svtTsdFile.setContent(tsTypes);
+                codeGenResponse.addFile(svtTsdFile);
+            }
+
             // swift service
             let fileDescriptorOutput = SwiftGen.gen(fileNameToDescriptor[fileName]);
             if (fileDescriptorOutput !== '') {
@@ -31,7 +42,7 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
                 codeGenResponse.addFile(svtTsdFile);
             }
 
-            // swift service
+            // swift objective-c headers
             let fileHeaderBridge = SwiftGenHeaderBridge.gen(fileNameToDescriptor[fileName]);
             if (fileHeaderBridge !== '') {
                 let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
@@ -40,7 +51,6 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
                 svtTsdFile.setContent(fileHeaderBridge);
                 codeGenResponse.addFile(svtTsdFile);
             }
-
         });
 
         process.stdout.write(new Buffer(codeGenResponse.serializeBinary()));
@@ -48,5 +58,4 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
         console.error('protoc-gen-ts error: ' + err.stack + '\n');
         process.exit(1);
     }
-
 });

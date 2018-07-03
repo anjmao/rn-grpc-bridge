@@ -141,6 +141,7 @@ function mapProtoDescriptor(input: DescriptorProto): MappingProto {
         name: input.getName(),
         fields: input.getFieldList().map(f => (<MappingProtoField>{ 
             name: mapFieldName(f.getName()),
+            jsName: f.getName(),
             typeName: f.getTypeName().split('.').pop(),
             type: f.getType(),
             repeated: f.getLabel() === FieldDescriptorProto.Label.LABEL_REPEATED

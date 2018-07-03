@@ -92,6 +92,11 @@ struct Book_Book {
     set {_uniqueStorage()._id = newValue}
   }
 
+  var detailsID: Int32 {
+    get {return _storage._detailsID}
+    set {_uniqueStorage()._detailsID = newValue}
+  }
+
   var unknownFields = SwiftProtobuf.UnknownStorage()
 
   init() {}
@@ -405,6 +410,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     5: .same(proto: "isActivate"),
     6: .same(proto: "details"),
     7: .same(proto: "id"),
+    8: .same(proto: "detailsId"),
   ]
 
   fileprivate class _StorageClass {
@@ -415,6 +421,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
     var _isActivate: Bool = false
     var _details: Book_BookDetails? = nil
     var _id: Int32 = 0
+    var _detailsID: Int32 = 0
 
     static let defaultInstance = _StorageClass()
 
@@ -428,6 +435,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       _isActivate = source._isActivate
       _details = source._details
       _id = source._id
+      _detailsID = source._detailsID
     }
   }
 
@@ -450,6 +458,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         case 5: try decoder.decodeSingularBoolField(value: &_storage._isActivate)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._details)
         case 7: try decoder.decodeSingularInt32Field(value: &_storage._id)
+        case 8: try decoder.decodeSingularInt32Field(value: &_storage._detailsID)
         default: break
         }
       }
@@ -479,6 +488,9 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
       if _storage._id != 0 {
         try visitor.visitSingularInt32Field(value: _storage._id, fieldNumber: 7)
       }
+      if _storage._detailsID != 0 {
+        try visitor.visitSingularInt32Field(value: _storage._detailsID, fieldNumber: 8)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -495,6 +507,7 @@ extension Book_Book: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementation
         if _storage._isActivate != other_storage._isActivate {return false}
         if _storage._details != other_storage._details {return false}
         if _storage._id != other_storage._id {return false}
+        if _storage._detailsID != other_storage._detailsID {return false}
         return true
       }
       if !storagesAreEqual {return false}

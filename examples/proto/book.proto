@@ -10,6 +10,7 @@ message Book {
     bool isActivate = 5;
     BookDetails details = 6;
     int32 id = 7;
+    int32 detailsId = 8;
 }
 
 message BookDetails {

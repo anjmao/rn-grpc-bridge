@@ -1,0 +1,22 @@
+/// <reference types="react-native" />
+export * from 'react-native'
+
+{{{messagesInterfacesOut}}}
+
+{{#each services}}
+
+interface {{{serviceName}}}Service {
+    {{#each methods}}
+    {{{lcFirst methodName}}}(req: {{{requestTypeName}}}): Promise<{{{responseTypeName}}}>
+    {{/each}}
+}
+
+{{/each}}
+
+declare module 'react-native' {
+    export interface NativeModulesStatic {
+        {{#each services}}
+        {{{serviceName}}}Service: {{{serviceName}}}Service;
+        {{/each}}
+    }
+}

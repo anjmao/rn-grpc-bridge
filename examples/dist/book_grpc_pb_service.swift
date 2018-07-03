@@ -43,6 +43,7 @@ class BooksService: GrpcService {
             books_Book.details = details_BookDetails
           }
           books_Book.id = Int32(books_Book$["details"]["id"] as? Int ?? 0)
+          books_Book.detailsID = Int32(books_Book$["details"]["detailsId"] as? Int ?? 0)
           req.books.append(books_Book)
         }
       }
@@ -60,6 +61,7 @@ class BooksService: GrpcService {
         book_Book.details = details_BookDetails
       }
       book_Book.id = Int32(book_Book$["details"]["id"] as? Int ?? 0)
+      book_Book.detailsID = Int32(book_Book$["details"]["detailsId"] as? Int ?? 0)
       req.book = book_Book
     }
     // end request mapping
@@ -98,6 +100,7 @@ class BooksService: GrpcService {
         _details_BookDetails$["pages"] = _details_BookDetails.pages
         _books_Book$["details"] = _details_BookDetails$
         _books_Book$["id"] = _books_Book.id
+        _books_Book$["detailsId"] = _books_Book.detailsID
         books$.append(_books_Book$)
       }
       jsRes["books"] = books$
@@ -113,6 +116,7 @@ class BooksService: GrpcService {
       _details_BookDetails$["pages"] = _details_BookDetails.pages
       _book_Book$["details"] = _details_BookDetails$
       _book_Book$["id"] = _book_Book.id
+      _book_Book$["detailsId"] = _book_Book.detailsID
       jsRes["book"] = _book_Book$
       // end response mapping
 
@@ -146,6 +150,7 @@ class BooksService: GrpcService {
       _details_BookDetails$["pages"] = _details_BookDetails.pages
       jsRes["details"] = _details_BookDetails$
       jsRes["id"] = res.id
+      jsRes["detailsId"] = res.detailsID
       // end response mapping
 
       resolve(jsRes)
@@ -178,6 +183,7 @@ class BooksService: GrpcService {
       _details_BookDetails$["pages"] = _details_BookDetails.pages
       jsRes["details"] = _details_BookDetails$
       jsRes["id"] = res.id
+      jsRes["detailsId"] = res.detailsID
       // end response mapping
 
       resolve(jsRes)
@@ -210,6 +216,7 @@ class BooksService: GrpcService {
       _details_BookDetails$["pages"] = _details_BookDetails.pages
       jsRes["details"] = _details_BookDetails$
       jsRes["id"] = res.id
+      jsRes["detailsId"] = res.detailsID
       // end response mapping
 
       resolve(jsRes)
@@ -246,6 +253,7 @@ class BooksService: GrpcService {
         _details_BookDetails$["pages"] = _details_BookDetails.pages
         _items_Book$["details"] = _details_BookDetails$
         _items_Book$["id"] = _items_Book.id
+        _items_Book$["detailsId"] = _items_Book.detailsID
         items$.append(_items_Book$)
       }
       jsRes["items"] = items$

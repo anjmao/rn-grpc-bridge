@@ -9,6 +9,7 @@ export interface MappingProto {
 export interface MappingProtoField {
     type: FieldDescriptorProto.Type;
     name: string;
+    jsName: string;
     typeName?: string;
     repeated?: boolean;
 }
@@ -40,7 +41,7 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
         const g = (i, val) => res.push(generateIndent(i) + val);
 
         const genAssign = (f, cast) => {
-            g(indent, `${mapTo}.${f.name} = ${cast(`${mapFrom}["${f.name}"]`)}`)
+            g(indent, `${mapTo}.${f.name} = ${cast(`${mapFrom}["${f.jsName}"]`)}`)
         };
 
         const genChildAssign = (i, f, repeated) => {
@@ -130,7 +131,7 @@ export function genResponseMappings(opt: GenResponseMappingsOptions): string[] {
         const g = (i, val) => res.push(generateIndent(i) + val);
 
         const genAssign = (f) => {
-            g(indent, `${mapTo}["${f.name}"] = ${mapFrom}.${f.name}`)
+            g(indent, `${mapTo}["${f.jsName}"] = ${mapFrom}.${f.name}`)
         };
 
         const genChildAssign = (i, f, repeated) => {
