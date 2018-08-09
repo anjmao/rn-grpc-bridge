@@ -223,3 +223,7 @@ class GrpcService: NSObject {
 
 ```
 
+### Docker
+
+See [example](https://github.com/anjmao/grpc-tools) which uses Docker image to run rn-grpc-bridge without any external library. 
+
