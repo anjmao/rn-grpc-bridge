@@ -4,6 +4,8 @@ import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_
 import * as SwiftGen from './lib/gen/SwiftGen';
 import * as SwiftGenHeaderBridge from './lib/gen/SwiftGenHeaderBridge';
 import * as TsNativeModuleTypes from './lib/gen/TsNativeModuleTypes';
+import * as SwiftGrpcConfig from './lib/gen/SwiftGrpcConfig';
+import { ServiceDesc } from './lib/gen/SwiftGrpcConfig';
 
 Utility.withAllStdIn((inputBuff: Buffer) => {
 
@@ -15,11 +17,19 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
         let codeGenRequest = CodeGeneratorRequest.deserializeBinary(typedInputBuff);
         let codeGenResponse = new CodeGeneratorResponse();
         let fileNameToDescriptor: { [key: string]: FileDescriptorProto } = {};
+        let allServices: ServiceDesc[] = [];
 
         codeGenRequest.getProtoFileList().forEach(protoFileDescriptor => {
             fileNameToDescriptor[protoFileDescriptor.getName()] = protoFileDescriptor;
+            const services = protoFileDescriptor.getServiceList().map((s) => ({
+                serviceName: s.getName(),
+                pkgName: protoFileDescriptor.getPackage()
+            }));
+            allServices.push(...services);
         });
 
+        let swiftFileContents: string[] = [];
+        let rnBridgeContents: string[] = [];
         codeGenRequest.getFileToGenerateList().forEach(fileName => {
 
             // react NativeModules grpc bridge types
@@ -32,26 +42,23 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
                 codeGenResponse.addFile(svtTsdFile);
             }
 
-            // swift service
+            // swift services
             let fileDescriptorOutput = SwiftGen.gen(fileNameToDescriptor[fileName]);
             if (fileDescriptorOutput !== '') {
-                let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
-                let svtTsdFile = new CodeGeneratorResponse.File();
-                svtTsdFile.setName(`${svcFileName}_service.swift`);
-                svtTsdFile.setContent(fileDescriptorOutput);
-                codeGenResponse.addFile(svtTsdFile);
+                swiftFileContents.push(fileDescriptorOutput);
             }
 
             // swift objective-c headers
             let fileHeaderBridge = SwiftGenHeaderBridge.gen(fileNameToDescriptor[fileName]);
             if (fileHeaderBridge !== '') {
-                let svcFileName = Utility.svcFilePathFromProtoWithoutExt(fileName);
-                let svtTsdFile = new CodeGeneratorResponse.File();
-                svtTsdFile.setName(`${svcFileName}_header.m`);
-                svtTsdFile.setContent(fileHeaderBridge);
-                codeGenResponse.addFile(svtTsdFile);
+                rnBridgeContents.push(fileHeaderBridge);
             }
         });
+
+        addFile(codeGenResponse, 'grpc_config.swift', SwiftGrpcConfig.genSwiftConfig(allServices));
+        addFile(codeGenResponse, 'grpc_config_bridge.m', SwiftGrpcConfig.genSwiftConfigBridge());
+        addFile(codeGenResponse, 'grpc_services.swift', swiftFileContents.join('\n'));
+        addFile(codeGenResponse, 'grpc_services_bridge.m', rnBridgeContents.join('\n'));
 
         process.stdout.write(new Buffer(codeGenResponse.serializeBinary()));
     } catch (err) {
@@ -59,3 +66,10 @@ Utility.withAllStdIn((inputBuff: Buffer) => {
         process.exit(1);
     }
 });
+
+function addFile(rsp: CodeGeneratorResponse, fileName: string, fileContent: string) {
+    const file = new CodeGeneratorResponse.File();
+    file.setName(fileName);
+    file.setContent(fileContent);
+    rsp.addFile(file);
+}

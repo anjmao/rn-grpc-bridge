@@ -1,0 +1,38 @@
+import UIKit
+import SwiftGRPC
+
+@objc(GrpcConfig)
+class GrpcConfig: NSObject {
+  {{#each services}}
+  static var {{serviceName}}Client: {{pkgName}}_{{serviceName}}ServiceClient? = nil
+  {{/each}}
+
+  @objc func initServices(_ apiUrl: String, secure: Bool, certFile: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    if (certFile == "") {
+    {{#each services}}
+      GrpcConfig.{{serviceName}}Client = {{pkgName}}_{{serviceName}}ServiceClient(address: apiUrl, secure: secure)
+    {{/each}}
+      resolve(true)
+      return
+    }
+    let certificateURL = Bundle.main.url(forResource: certFile, withExtension: "crt")!
+    let certificates = try! String(contentsOf: certificateURL, encoding: .utf8)
+    {{#each services}}
+    GrpcConfig.{{serviceName}}Client = {{pkgName}}_{{serviceName}}ServiceClient(address: apiUrl, certificates: certificates)
+    {{/each}}
+    resolve(true)
+  }
+  
+  @objc func setMetadata(_ jsMetadata: [String: String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let metadata = try! Metadata(jsMetadata)
+    {{#each services}}
+    GrpcConfig.{{serviceName}}Client?.metadata = metadata
+    {{/each}}
+    resolve(true)
+  }
+  
+  @objc
+  static func requiresMainQueueSetup() -> Bool {
+    return false
+  }
+}

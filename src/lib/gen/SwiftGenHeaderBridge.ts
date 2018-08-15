@@ -52,7 +52,7 @@ export function gen(descriptor: FileDescriptorProto): string {
         return str.charAt(0).toLowerCase() + str.slice(1);
     });
 
-    return TplEngine.render('header_swift', {
+    return TplEngine.render('rn_swift_bridge', {
         packageName: packageName,
         fileName: fileName,
         services: services

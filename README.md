@@ -208,19 +208,38 @@ protoc \
 proto/*.proto
 ```
 
-3. Add generated files to you react native ios/java
+3. Initialize services from react native. See generate grpc_config.swift for call arguments.
 
-For Swift create base class to setup grpc clients
-```swift
-import UIKit
-import SwiftGRPC
 
-@objc(GrpcService)
-class GrpcService: NSObject {
-  var Debug1GrpcClient = Debug_Debug1ServiceClient(address: "127.0.0.1:50051", secure: false)
-  var Debug2GrpcClient = Debug_Debug2ServiceClient(address: "127.0.0.1:50051", secure: false)
+```js
+import { NativeModules, DebugService } from 'react-native';
+import { DebugService, PingRequest } from './pb/debug_grpc_pb_types';
+
+// inside some initial component
+class InitialScreen {
+  async componentDidMount() {
+    const grpcConfig = NativeModules.GrpcConfig;
+
+    // init for local dev
+    await grpcConfig.initServices('localhost:9000', false, '');
+    // or for secure with TLS cert to staging/prod
+    // await grpcConfig.initServices('corp.staging.com', true, 'certname');
+
+    // it is also possible to set global for all services metadata
+    await grpcConfig.setMetadata({
+      'x-key': 'x-value',
+      'api-key': 'abc1'
+    });
+
+    // now we are ready to call grpc
+    const debugService: DebugService = NativeModules.DebugService;
+    const req: PingRequest = {
+      message: `ping from react native ${new Date().getTime()}`
+    };
+    const rsp = await debugService.ping(req);
+    console.log(rsp);
+  }
 }
-
 ```
 
 ### Docker

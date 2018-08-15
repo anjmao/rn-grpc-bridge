@@ -1,0 +1,30 @@
+syntax = "proto3";
+package debug;
+
+service Debug {
+  rpc GetVersion (GetVersionRequest) returns (GetVersionReply) {}
+  rpc Ping(PingRequest) returns (PingReply) {}
+  // rpc GetStream(GetStreamRequest) returns (stream GetStreamReply) {}
+}
+
+message GetVersionRequest {
+}
+
+message GetVersionReply {
+  string version = 1;
+}
+
+message PingRequest {
+  string message = 1;
+}
+
+message PingReply {
+  string message = 1;
+}
+
+message GetStreamRequest {
+}
+
+message GetStreamReply {
+  string data = 1;
+}

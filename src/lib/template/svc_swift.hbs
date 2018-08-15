@@ -7,12 +7,10 @@ import SwiftGRPC
 
 {{#each services}}
 @objc({{{serviceName}}}Service)
-class {{{serviceName}}}Service: GrpcService {
-
+class {{{serviceName}}}Service: NSObject {
 {{#each methods}}
 
   @objc func {{{lcFirst methodName}}}(_ {{{requestMapFrom}}}: [String: Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let svc = {{{serviceName}}}GrpcClient
     var {{{requestMapTo}}} = {{{requestTypeName}}}
 
     // request mapping
@@ -20,7 +18,7 @@ class {{{serviceName}}}Service: GrpcService {
     // end request mapping
 
     do {
-      let {{{responseMapFrom}}} = try svc.{{{lcFirst methodName}}}({{{requestMapTo}}})
+      let {{{responseMapFrom}}} = try GrpcConfig.{{{serviceName}}}Client!.{{{lcFirst methodName}}}({{{requestMapTo}}})
       var {{{responseMapTo}}}: [String: Any] = [:]
 
       // response mapping
@@ -28,11 +26,12 @@ class {{{serviceName}}}Service: GrpcService {
       // end response mapping
 
       resolve({{{responseMapTo}}})
+    } catch RPCError.callError(let err) {
+      reject(String(err.statusCode.rawValue), err.statusMessage, err as? Error)
     } catch {
-      reject("ERROR", error.localizedDescription, error)
+      reject("-1", error.localizedDescription, error)
     }
   }
-
 {{/each}}
   
   @objc

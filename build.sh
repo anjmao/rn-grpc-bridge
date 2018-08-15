@@ -20,11 +20,3 @@ protoc \
 --plugin=protoc-gen-rn=./rn-grpc-bridge.js \
 -I ./proto \
 proto/*.proto
-
-# Swift proto and grpc
-protoc \
---swift_out=${PROTO_DEST} \
---plugin=protoc-gen-swiftgrpc=../node_modules/grpc-plugins/osx/protoc-gen-swiftgrpc \
---swiftgrpc_out=${PROTO_DEST} \
--I ./proto \
-./proto/*.proto
