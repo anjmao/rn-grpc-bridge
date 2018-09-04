@@ -11,6 +11,7 @@ export interface Book {
   id?: number;
   detailsId?: number;
   description?: string;
+  videoUrl?: string;
 }
 export interface BookDetails {
   pages?: number;

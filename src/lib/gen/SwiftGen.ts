@@ -130,13 +130,16 @@ function getPackageName(pkg: string) {
     return pkg[0].toUpperCase() + pkg.slice(1);
 }
 const RESERVED_NAMES = ['description'];
+const UPPERCASE_ENDING = ['Id', 'Url'];
 function mapProtoDescriptor(input: DescriptorProto): MappingProto {
     const mapFieldName = (name: string) => {
-        if (name.length > 2 && name.endsWith('Id')) {
-            return name.slice(0 , name.length - 2) + 'ID';
-        }
         if (RESERVED_NAMES.indexOf(name) > -1) {
-            name = `${name}_p`;
+            return `${name}_p`;
+        }
+        for (const ending of UPPERCASE_ENDING) {
+            if (name.length > 2 && name.endsWith(ending)) {
+                return name.slice(0 , name.length - ending.length) + ending.toUpperCase();
+            }
         }
         return name;
     };

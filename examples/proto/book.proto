@@ -12,6 +12,7 @@ message Book {
     int32 id = 7;
     int32 detailsId = 8;
     string description = 9;
+    string videoUrl = 10;
 }
 
 message BookDetails {

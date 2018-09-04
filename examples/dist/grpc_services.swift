@@ -44,6 +44,7 @@ class BooksService: NSObject {
           books_Book.id = Int32(books_Book$["details"]["id"] as? Int ?? 0)
           books_Book.detailsID = Int32(books_Book$["details"]["detailsId"] as? Int ?? 0)
           books_Book.description_p = books_Book$["details"]["description"] as? String ?? ""
+          books_Book.videoURL = books_Book$["details"]["videoUrl"] as? String ?? ""
           req.books.append(books_Book)
         }
       }
@@ -63,6 +64,7 @@ class BooksService: NSObject {
       book_Book.id = Int32(book_Book$["details"]["id"] as? Int ?? 0)
       book_Book.detailsID = Int32(book_Book$["details"]["detailsId"] as? Int ?? 0)
       book_Book.description_p = book_Book$["details"]["description"] as? String ?? ""
+      book_Book.videoURL = book_Book$["details"]["videoUrl"] as? String ?? ""
       req.book = book_Book
     }
     // end request mapping
@@ -103,6 +105,7 @@ class BooksService: NSObject {
         _books_Book$["id"] = _books_Book.id
         _books_Book$["detailsId"] = _books_Book.detailsID
         _books_Book$["description"] = _books_Book.description_p
+        _books_Book$["videoUrl"] = _books_Book.videoURL
         books$.append(_books_Book$)
       }
       jsRes["books"] = books$
@@ -120,6 +123,7 @@ class BooksService: NSObject {
       _book_Book$["id"] = _book_Book.id
       _book_Book$["detailsId"] = _book_Book.detailsID
       _book_Book$["description"] = _book_Book.description_p
+      _book_Book$["videoUrl"] = _book_Book.videoURL
       jsRes["book"] = _book_Book$
       // end response mapping
 
@@ -155,6 +159,7 @@ class BooksService: NSObject {
       jsRes["id"] = res.id
       jsRes["detailsId"] = res.detailsID
       jsRes["description"] = res.description_p
+      jsRes["videoUrl"] = res.videoURL
       // end response mapping
 
       resolve(jsRes)
@@ -189,6 +194,7 @@ class BooksService: NSObject {
       jsRes["id"] = res.id
       jsRes["detailsId"] = res.detailsID
       jsRes["description"] = res.description_p
+      jsRes["videoUrl"] = res.videoURL
       // end response mapping
 
       resolve(jsRes)
@@ -223,6 +229,7 @@ class BooksService: NSObject {
       jsRes["id"] = res.id
       jsRes["detailsId"] = res.detailsID
       jsRes["description"] = res.description_p
+      jsRes["videoUrl"] = res.videoURL
       // end response mapping
 
       resolve(jsRes)
@@ -261,6 +268,7 @@ class BooksService: NSObject {
         _items_Book$["id"] = _items_Book.id
         _items_Book$["detailsId"] = _items_Book.detailsID
         _items_Book$["description"] = _items_Book.description_p
+        _items_Book$["videoUrl"] = _items_Book.videoURL
         items$.append(_items_Book$)
       }
       jsRes["items"] = items$
