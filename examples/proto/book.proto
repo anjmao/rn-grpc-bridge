@@ -11,6 +11,7 @@ message Book {
     BookDetails details = 6;
     int32 id = 7;
     int32 detailsId = 8;
+    string description = 9;
 }
 
 message BookDetails {

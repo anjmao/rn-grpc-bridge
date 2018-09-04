@@ -10,6 +10,7 @@ export interface Book {
   details?: BookDetails;
   id?: number;
   detailsId?: number;
+  description?: string;
 }
 export interface BookDetails {
   pages?: number;

@@ -40,11 +40,11 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
         }
         const g = (i, val) => res.push(generateIndent(i) + val);
 
-        const genAssign = (f, cast) => {
+        const genAssign = (f: MappingProtoField, cast: (val) => string) => {
             g(indent, `${mapTo}.${f.name} = ${cast(`${mapFrom}["${f.jsName}"]`)}`)
         };
 
-        const genChildAssign = (i, f, repeated) => {
+        const genChildAssign = (i: number, f: MappingProtoField, repeated: boolean) => {
             const oldMapTo = mapTo;
             const oldMapFrom = mapFrom
             const newMapTo = `${f.name}_${f.typeName}`;
@@ -62,7 +62,7 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
             g(i, `}`)
         };
 
-        const genChildRepeatedAssign = (f) => {
+        const genChildRepeatedAssign = (f: MappingProtoField) => {
             g(indent, `if let arr = ${mapFrom}["${f.name}"] as? [[String: Any]] {`)
             g(indent + 1, `for item in arr {`)
             genChildAssign(indent + 2, f, true)
@@ -130,11 +130,11 @@ export function genResponseMappings(opt: GenResponseMappingsOptions): string[] {
     const gen = (indent: number, message: MappingProto, mapFrom: string, mapTo: string) => {
         const g = (i, val) => res.push(generateIndent(i) + val);
 
-        const genAssign = (f) => {
+        const genAssign = (f: MappingProtoField) => {
             g(indent, `${mapTo}["${f.jsName}"] = ${mapFrom}.${f.name}`)
         };
 
-        const genChildAssign = (i, f, repeated) => {
+        const genChildAssign = (i: number, f: MappingProtoField, repeated: boolean) => {
             const oldMapTo = mapTo;
             const oldMapFrom = mapFrom
             const newMapTo = `_${f.name}_${f.typeName}$`;
