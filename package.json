@@ -1,6 +1,6 @@
 {
   "name": "rn-grpc-bridge",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Generate grpc Swift/Android bridge for React Native",
   "main": "build/index.js",
   "scripts": {
