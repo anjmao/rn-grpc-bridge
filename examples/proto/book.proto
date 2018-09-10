@@ -2,6 +2,14 @@ syntax = "proto3";
 
 package book;
 
+service Books {
+    rpc GetTypes (GetTypesRequest) returns (GetTypesResponse) {}
+    rpc GetBook (GetBookRequest) returns (Book) {}
+    rpc GetBooksViaAuthor (GetBookViaAuthor) returns (stream Book) {}
+    rpc GetGreatestBook (stream GetBookRequest) returns (Book) {}
+    rpc GetBooks (GetBookRequest) returns (GetBooksResponse) {}
+}
+
 message Book {
     int64 isbn = 1;
     string title = 2;
@@ -47,8 +55,9 @@ message GetTypesRequest {
     bool bln = 13;
     string str = 14;
     bytes bytx = 15;
-    repeated Book books = 16;
-    Book book = 17;
+    Book book = 16;
+    Book book2 = 17;
+    repeated Book books = 18;
 }
 
 message GetTypesResponse {
@@ -67,16 +76,8 @@ message GetTypesResponse {
     bool bln = 13;
     string str = 14;
     bytes bytx = 15;
-    repeated Book books = 16;
-    Book book = 17;
-}
-
-service Books {
-    rpc GetTypes (GetTypesRequest) returns (GetTypesResponse) {}
-    rpc GetBook (GetBookRequest) returns (Book) {}
-    rpc GetBooksViaAuthor (GetBookViaAuthor) returns (stream Book) {}
-    rpc GetGreatestBook (stream GetBookRequest) returns (Book) {}
-    rpc GetBooks (GetBookRequest) returns (GetBooksResponse) {}
+    Book book = 16;
+    repeated Book books = 17;
 }
 
 message BookStore {

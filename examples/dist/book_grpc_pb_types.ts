@@ -41,8 +41,9 @@ export interface GetTypesRequest {
   bln?: boolean;
   str?: string;
   bytx?: Uint8Array;
-  books: Book[];
   book?: Book;
+  book2?: Book;
+  books: Book[];
 }
 export interface GetTypesResponse {
   dbl?: number;
@@ -60,8 +61,8 @@ export interface GetTypesResponse {
   bln?: boolean;
   str?: string;
   bytx?: Uint8Array;
-  books: Book[];
   book?: Book;
+  books: Book[];
 }
 export interface BookStore {
   name?: string;

@@ -49,9 +49,9 @@ export function genRequestFields(opt: GenRequestMappingOptions): string[] {
             const oldMapFrom = mapFrom
             const newMapTo = `${f.name}_${f.typeName}`;
             const newMapFrom = `${f.name}_${f.typeName}$`;
-            mapFrom = repeated ? 'item' : `${oldMapFrom}["${f.name}"]`;
-            g(i, `if let ${newMapFrom} = ${mapFrom} as? [String: Any] {`)
-            g(i + 1, `var ${newMapTo} = ${f.typeName}()`);
+            const mapFromItem = repeated ? 'item' : `${oldMapFrom}["${f.name}"]`;
+            g(i, `if let ${newMapFrom} = ${mapFromItem} as? [String: Any] {`)
+            g(i + 1, `var ${newMapTo} = ${opt.packageName}_${f.typeName}()`);
             const child = opt.messages.find(x => x.name === f.typeName);
             gen(i + 1, child, newMapFrom, newMapTo);
             if (repeated) {

@@ -27,45 +27,63 @@ class BooksService: NSObject {
     req.bln = jsReq["bln"] as? Bool ?? false
     req.str = jsReq["str"] as? String ?? ""
     req.bytx = jsReq["bytx"] as? Data ?? Data()
-    if let arr = jsReq["books"] as? [[String: Any]] {
-      for item in arr {
-        if let books_Book$ = item as? [String: Any] {
-          var books_Book = Book()
-          books_Book.isbn = Int64(books_Book$["isbn"] as? Int ?? 0)
-          books_Book.title = books_Book$["title"] as? String ?? ""
-          books_Book.author = books_Book$["author"] as? String ?? ""
-          books_Book.pages = Int32(books_Book$["pages"] as? Int ?? 0)
-          books_Book.isActivate = books_Book$["isActivate"] as? Bool ?? false
-          if let details_BookDetails$ = books_Book$["details"] as? [String: Any] {
-            var details_BookDetails = BookDetails()
-            details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
-            books_Book.details = details_BookDetails
-          }
-          books_Book.id = Int32(books_Book$["details"]["id"] as? Int ?? 0)
-          books_Book.detailsID = Int32(books_Book$["details"]["detailsId"] as? Int ?? 0)
-          books_Book.description_p = books_Book$["details"]["description"] as? String ?? ""
-          books_Book.videoURL = books_Book$["details"]["videoUrl"] as? String ?? ""
-          req.books.append(books_Book)
-        }
-      }
-    }
-    if let book_Book$ = item["book"] as? [String: Any] {
-      var book_Book = Book()
+    if let book_Book$ = jsReq["book"] as? [String: Any] {
+      var book_Book = Book_Book()
       book_Book.isbn = Int64(book_Book$["isbn"] as? Int ?? 0)
       book_Book.title = book_Book$["title"] as? String ?? ""
       book_Book.author = book_Book$["author"] as? String ?? ""
       book_Book.pages = Int32(book_Book$["pages"] as? Int ?? 0)
       book_Book.isActivate = book_Book$["isActivate"] as? Bool ?? false
       if let details_BookDetails$ = book_Book$["details"] as? [String: Any] {
-        var details_BookDetails = BookDetails()
+        var details_BookDetails = Book_BookDetails()
         details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
         book_Book.details = details_BookDetails
       }
-      book_Book.id = Int32(book_Book$["details"]["id"] as? Int ?? 0)
-      book_Book.detailsID = Int32(book_Book$["details"]["detailsId"] as? Int ?? 0)
-      book_Book.description_p = book_Book$["details"]["description"] as? String ?? ""
-      book_Book.videoURL = book_Book$["details"]["videoUrl"] as? String ?? ""
+      book_Book.id = Int32(book_Book$["id"] as? Int ?? 0)
+      book_Book.detailsID = Int32(book_Book$["detailsId"] as? Int ?? 0)
+      book_Book.description_p = book_Book$["description"] as? String ?? ""
+      book_Book.videoURL = book_Book$["videoUrl"] as? String ?? ""
       req.book = book_Book
+    }
+    if let book2_Book$ = jsReq["book2"] as? [String: Any] {
+      var book2_Book = Book_Book()
+      book2_Book.isbn = Int64(book2_Book$["isbn"] as? Int ?? 0)
+      book2_Book.title = book2_Book$["title"] as? String ?? ""
+      book2_Book.author = book2_Book$["author"] as? String ?? ""
+      book2_Book.pages = Int32(book2_Book$["pages"] as? Int ?? 0)
+      book2_Book.isActivate = book2_Book$["isActivate"] as? Bool ?? false
+      if let details_BookDetails$ = book2_Book$["details"] as? [String: Any] {
+        var details_BookDetails = Book_BookDetails()
+        details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
+        book2_Book.details = details_BookDetails
+      }
+      book2_Book.id = Int32(book2_Book$["id"] as? Int ?? 0)
+      book2_Book.detailsID = Int32(book2_Book$["detailsId"] as? Int ?? 0)
+      book2_Book.description_p = book2_Book$["description"] as? String ?? ""
+      book2_Book.videoURL = book2_Book$["videoUrl"] as? String ?? ""
+      req.book2 = book2_Book
+    }
+    if let arr = jsReq["books"] as? [[String: Any]] {
+      for item in arr {
+        if let books_Book$ = item as? [String: Any] {
+          var books_Book = Book_Book()
+          books_Book.isbn = Int64(books_Book$["isbn"] as? Int ?? 0)
+          books_Book.title = books_Book$["title"] as? String ?? ""
+          books_Book.author = books_Book$["author"] as? String ?? ""
+          books_Book.pages = Int32(books_Book$["pages"] as? Int ?? 0)
+          books_Book.isActivate = books_Book$["isActivate"] as? Bool ?? false
+          if let details_BookDetails$ = books_Book$["details"] as? [String: Any] {
+            var details_BookDetails = Book_BookDetails()
+            details_BookDetails.pages = Int32(details_BookDetails$["pages"] as? Int ?? 0)
+            books_Book.details = details_BookDetails
+          }
+          books_Book.id = Int32(books_Book$["id"] as? Int ?? 0)
+          books_Book.detailsID = Int32(books_Book$["detailsId"] as? Int ?? 0)
+          books_Book.description_p = books_Book$["description"] as? String ?? ""
+          books_Book.videoURL = books_Book$["videoUrl"] as? String ?? ""
+          req.books.append(books_Book)
+        }
+      }
     }
     // end request mapping
 
@@ -89,6 +107,22 @@ class BooksService: NSObject {
       jsRes["bln"] = res.bln
       jsRes["str"] = res.str
       jsRes["bytx"] = res.bytx
+      let _book_Book = res.book
+      var _book_Book$: [String: Any] = [:]
+      _book_Book$["isbn"] = _book_Book.isbn
+      _book_Book$["title"] = _book_Book.title
+      _book_Book$["author"] = _book_Book.author
+      _book_Book$["pages"] = _book_Book.pages
+      _book_Book$["isActivate"] = _book_Book.isActivate
+      let _details_BookDetails = _book_Book.details
+      var _details_BookDetails$: [String: Any] = [:]
+      _details_BookDetails$["pages"] = _details_BookDetails.pages
+      _book_Book$["details"] = _details_BookDetails$
+      _book_Book$["id"] = _book_Book.id
+      _book_Book$["detailsId"] = _book_Book.detailsID
+      _book_Book$["description"] = _book_Book.description_p
+      _book_Book$["videoUrl"] = _book_Book.videoURL
+      jsRes["book"] = _book_Book$
       var books$: [[String: Any]] = []
       for item in res.books {
         let _books_Book = item
@@ -109,22 +143,6 @@ class BooksService: NSObject {
         books$.append(_books_Book$)
       }
       jsRes["books"] = books$
-      let _book_Book = res.book
-      var _book_Book$: [String: Any] = [:]
-      _book_Book$["isbn"] = _book_Book.isbn
-      _book_Book$["title"] = _book_Book.title
-      _book_Book$["author"] = _book_Book.author
-      _book_Book$["pages"] = _book_Book.pages
-      _book_Book$["isActivate"] = _book_Book.isActivate
-      let _details_BookDetails = _book_Book.details
-      var _details_BookDetails$: [String: Any] = [:]
-      _details_BookDetails$["pages"] = _details_BookDetails.pages
-      _book_Book$["details"] = _details_BookDetails$
-      _book_Book$["id"] = _book_Book.id
-      _book_Book$["detailsId"] = _book_Book.detailsID
-      _book_Book$["description"] = _book_Book.description_p
-      _book_Book$["videoUrl"] = _book_Book.videoURL
-      jsRes["book"] = _book_Book$
       // end response mapping
 
       resolve(jsRes)
