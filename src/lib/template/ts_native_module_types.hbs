@@ -4,7 +4,7 @@
 {{{messagesInterfacesOut}}}
 
 {{#each services}}
-export interface {{{serviceName}}}Service {
+export interface Grpc{{{serviceName}}}Service {
     {{#each methods}}
     {{{lcFirst methodName}}}(req: {{{requestTypeName}}}): Promise<{{{responseTypeName}}}>;
     {{/each}}

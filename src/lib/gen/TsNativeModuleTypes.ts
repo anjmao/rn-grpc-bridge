@@ -65,14 +65,14 @@ export function gen(descriptor: FileDescriptorProto): string {
 }
 
 function getTypeName(name: string) {
-    return name.split('.').pop()
+    return `${name.split('.').pop()}Pb`;
 }
 
 function genMessageTypesTsInterfaces(messages: DescriptorProto[]) {
     const res: string[] = [];
     const g = (i, val) => res.push(generateIndent(i) + val);
     for (let msg of messages) {
-        g(0, `export interface ${msg.getName()} {`);
+        g(0, `export interface ${msg.getName()}Pb {`);
         for (let field of msg.getFieldList()) {
             let optionalLabel = field.getLabel() === FieldDescriptorProto.Label.LABEL_OPTIONAL ? '?' : '';
             g(1, `${field.getName()}${optionalLabel}: ${getTsType(field)};`);
