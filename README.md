@@ -1,5 +1,8 @@
 [![npm version](https://badge.fury.io/js/rn-grpc-bridge.svg)](https://badge.fury.io/js/rn-grpc-bridge)
 
+# Obsolete!
+As I prototyped better implementation using low level native grpc API, I was able to use Protobuf.js directly. See https://github.com/trackforce/react-native-grpc-starter
+
 # React Native gRPC Swift/Java bridge generator
 If you are developing React Native app and using gRPC for backend communication when you need to bind native gRPC Swift/Android packages and communicate between native and javascript.
 React Native accepts only Dictionaries and Arrays with primitive types.
